@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EBC Agent Studio</title>
+    <link rel="stylesheet" href="./pages/prototype-shell.css" />
+  </head>
+  <body>
+    <div class="prototype-shell">
+      <aside class="prototype-shell-sidebar">
+        <div class="prototype-shell-brand">
+          <div class="prototype-shell-brand-mark">EBC</div>
+          <div>
+            <div class="prototype-shell-brand-title">Agent Studio</div>
+            <div class="prototype-shell-brand-sub">AI 开发平台 · EBCAI版</div>
+          </div>
+        </div>
+        <nav class="prototype-shell-nav" id="prototypeShellNav" aria-label="平台导航"></nav>
+        <div class="prototype-shell-user">
+          <div class="prototype-shell-avatar">张</div>
+          <div class="prototype-shell-user-text">
+            <div class="prototype-shell-user-name">张明</div>
+            <div class="prototype-shell-user-role">Agent 开发人员</div>
+          </div>
+          <div class="prototype-shell-settings" aria-hidden="true">⚙</div>
+        </div>
+      </aside>
+      <main class="prototype-shell-main">
+        <iframe class="prototype-shell-frame" id="prototypeShellFrame" title="EBC Agent Studio 功能页面"></iframe>
+      </main>
+      <div class="prototype-shell-toast" id="prototypeShellToast" role="status"></div>
+    </div>
+    <script src="./pages/prototype-routes.js"></script>
+    <script src="./prototype-shell.js"></script>
+  </body>
+</html>

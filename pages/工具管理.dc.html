@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EBC Agent Studio · Tool 工具</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EBC Agent Studio · Tool 工具</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#f3f5f9;color:#1c2733;line-height:1.5;
+    font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#2563c9;text-decoration:none}
+  a:hover{color:#1c4ea3}
+  ::selection{background:#cfe0ff}
+  input,textarea,select{font-family:inherit}
+  input:focus,textarea:focus,select:focus{border-color:#2563c9;box-shadow:0 0 0 3px #eef3fb}
+  input::placeholder,textarea::placeholder{color:#aab2bf}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:#d5dbe6;border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:#c2cad8}
+  summary{list-style:none;cursor:pointer}
+  summary::-webkit-details-marker{display:none}
+  details[open] .navchev{transform:rotate(90deg)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes toastin{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</helmet>
+
+<div style="display:flex;height:100vh;overflow:hidden">
+
+  <!-- ===================== 侧边栏 ===================== -->
+  <aside style="width:248px;flex:0 0 248px;background:#16233b;color:#cfd8e6;display:flex;flex-direction:column;height:100vh">
+    <div style="display:flex;align-items:center;gap:11px;padding:18px 18px 16px">
+      <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#3a72d4,#2450a8);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:15px;letter-spacing:.5px;box-shadow:0 3px 8px rgba(36,80,168,.4)">EBC</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px">Agent Studio</div>
+        <div style="font-size:10.5px;color:#7d8aa0;margin-top:2px;letter-spacing:1px">AI 开发平台 · EBCAI版</div>
+      </div>
+    </div>
+
+    <nav style="flex:1;overflow-y:auto;padding:4px 12px 14px">
+      <div style="font-size:11px;color:#67738c;padding:13px 12px 7px;letter-spacing:1px">平台导航</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;font-size:13.5px;color:#bcc7d8;cursor:pointer;margin-bottom:2px" style-hover="background:rgba(255,255,255,.06);color:#fff">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:20px;height:20px"><path d="M21 11.5a8.4 8.4 0 01-1.2 4.3 8.5 8.5 0 01-7.3 4.2 8.4 8.4 0 01-4.3-1.2L3 20l1.2-5.2A8.4 8.4 0 013 10.5a8.5 8.5 0 014.2-7.3A8.4 8.4 0 0111.5 2h.5a8.5 8.5 0 018 8v.5z"/></svg>
+        对话测试
+      </div>
+
+      <div style="font-size:11px;color:#67738c;padding:13px 12px 7px;letter-spacing:1px">构建与能力</div>
+
+      <details style="margin-bottom:2px">
+        <summary style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;font-size:13.5px;color:#bcc7d8" style-hover="background:rgba(255,255,255,.06);color:#fff">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:20px;height:20px"><rect x="4" y="8" width="16" height="11" rx="2"/><path d="M12 8V4M8.5 13h.01M15.5 13h.01M2 13h2M20 13h2"/></svg>
+          Agent 开发中心
+          <span class="navchev" style="margin-left:auto;transition:transform .2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M9 6l6 6-6 6"/></svg></span>
+        </summary>
+        <div style="padding:2px 0 4px">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;font-size:13px;color:#9aa7bd;cursor:pointer" style-hover="background:rgba(255,255,255,.05);color:#fff">应用配置 <span style="margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;background:#e9c25f;border-radius:4px;padding:1px 5px">MVP</span></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;font-size:13px;color:#9aa7bd;cursor:pointer" style-hover="background:rgba(255,255,255,.05);color:#fff">应用发布 <span style="margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;background:#e9c25f;border-radius:4px;padding:1px 5px">MVP</span></div>
+        </div>
+      </details>
+
+      <details open style="margin-bottom:2px">
+        <summary style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;font-size:13.5px;color:#fff">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:20px;height:20px"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.6 2.6-2-2 2.6-2.6z"/></svg>
+          能力与工具中心
+          <span class="navchev" style="margin-left:auto;transition:transform .2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M9 6l6 6-6 6"/></svg></span>
+        </summary>
+        <div style="padding:2px 0 4px">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;font-size:13px;color:#9aa7bd;cursor:pointer" style-hover="background:rgba(255,255,255,.05);color:#fff">MCP 接入 <span style="margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;background:#e9c25f;border-radius:4px;padding:1px 5px">MVP</span></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;font-size:13px;color:#fff;background:rgba(37,99,201,.2);cursor:pointer;position:relative">Tool 工具 <span style="margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;background:#e9c25f;border-radius:4px;padding:1px 5px">MVP</span></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;font-size:13px;color:#9aa7bd;cursor:pointer" style-hover="background:rgba(255,255,255,.05);color:#fff">Skill 技能 <span style="margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;background:#e9c25f;border-radius:4px;padding:1px 5px">MVP</span></div>
+        </div>
+      </details>
+
+      <details style="margin-bottom:2px">
+        <summary style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;font-size:13.5px;color:#bcc7d8" style-hover="background:rgba(255,255,255,.06);color:#fff">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:20px;height:20px"><path d="M5 4a1 1 0 011-1h13v15H6a2 2 0 00-2 2V5z"/><path d="M19 18H6a2 2 0 00-2 2"/></svg>
+          知识管理中心
+          <span class="navchev" style="margin-left:auto;transition:transform .2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M9 6l6 6-6 6"/></svg></span>
+        </summary>
+        <div style="padding:2px 0 4px">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;font-size:13px;color:#9aa7bd;cursor:pointer" style-hover="background:rgba(255,255,255,.05);color:#fff">知识库 <span style="margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;background:#e9c25f;border-radius:4px;padding:1px 5px">MVP</span></div>
+        </div>
+      </details>
+
+      <details style="margin-bottom:2px">
+        <summary style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;font-size:13.5px;color:#bcc7d8" style-hover="background:rgba(255,255,255,.06);color:#fff">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:20px;height:20px"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.6 3.6 3 8 3s8-1.4 8-3V5M4 11v6c0 1.6 3.6 3 8 3s8-1.4 8-3v-6"/></svg>
+          数据管理中心
+          <span class="navchev" style="margin-left:auto;transition:transform .2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M9 6l6 6-6 6"/></svg></span>
+        </summary>
+        <div style="padding:2px 0 4px">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;font-size:13px;color:#9aa7bd;cursor:pointer" style-hover="background:rgba(255,255,255,.05);color:#fff">结构化数据接入 <span style="margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;background:#e9c25f;border-radius:4px;padding:1px 5px">MVP</span></div>
+        </div>
+      </details>
+
+      <div style="font-size:11px;color:#67738c;padding:13px 12px 7px;letter-spacing:1px">运营</div>
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;font-size:13.5px;color:#bcc7d8;cursor:pointer;margin-bottom:2px" style-hover="background:rgba(255,255,255,.06);color:#fff">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:20px;height:20px"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        运营监控中心
+      </div>
+    </nav>
+
+    <div style="border-top:1px solid rgba(255,255,255,.08);padding:12px;display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#4d7fd6,#2f5aa8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700">张</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;color:#e7ecf4;font-weight:600">张明</div>
+        <div style="font-size:10.5px;color:#7d8aa0;margin-top:1px">Agent 开发人员</div>
+      </div>
+      <span style="color:#7d8aa0;cursor:pointer" style-hover="color:#fff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:20px;height:20px"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.5 7.5 0 000-2l2-1.5-2-3.5-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.5L4.6 11a7.5 7.5 0 000 2l-2 1.5 2 3.5 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.5-2-1.5z"/></svg></span>
+    </div>
+  </aside>
+
+  <!-- ===================== 主区域 ===================== -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;overflow:hidden">
+
+    <!-- 顶栏 -->
+    <header style="height:58px;flex:0 0 58px;background:#fff;border-bottom:1px solid #e6eaf0;display:flex;align-items:center;gap:14px;padding:0 22px">
+      <div style="font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px">
+        <sc-if value="{{ showBack }}">
+          <span onClick="{{ onBack }}" style="width:30px;height:30px;border-radius:8px;border:1px solid #e6eaf0;display:flex;align-items:center;justify-content:center;color:#5b6573;cursor:pointer;background:#fff" style-hover="color:#2563c9;border-color:#eef3fb;background:#f6f8fb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px"><path d="M15 18l-6-6 6-6"/></svg></span>
+        </sc-if>
+        <span>{{ crumbTitle }}</span>
+        <sc-if value="{{ showSub }}"><span style="font-size:12px;color:#9099a6;font-weight:400">{{ crumbSub }}</span></sc-if>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <sc-if value="{{ isList }}">
+          <div onClick="{{ onDoc }}" style="display:flex;align-items:center;gap:6px;border:1px solid #e6eaf0;background:#fff;border-radius:8px;padding:8px 13px;font-size:13px;color:#5b6573;cursor:pointer;font-weight:500" style-hover="background:#f6f8fb;color:#2563c9;border-color:#eef3fb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:15px;height:15px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>使用文档</div>
+        </sc-if>
+        <sc-if value="{{ isDetail }}">
+          <div onClick="{{ onEdit }}" style="display:flex;align-items:center;gap:6px;border:1px solid #2563c9;background:#2563c9;color:#fff;border-radius:8px;padding:8px 13px;font-size:13px;cursor:pointer;font-weight:600;box-shadow:0 3px 9px rgba(37,99,201,.3)" style-hover="background:#1c4ea3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:15px;height:15px"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>编辑</div>
+          <div onClick="{{ onAskDelete }}" style="display:flex;align-items:center;gap:6px;border:1px solid #e6eaf0;background:#fff;color:#5b6573;border-radius:8px;padding:8px 13px;font-size:13px;cursor:pointer;font-weight:500" style-hover="color:#d0584f;border-color:#f3cdc9;background:#fbeceb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="width:15px;height:15px"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>删除</div>
+        </sc-if>
+      </div>
+    </header>
+
+    <!-- ===================== 视图 1：列表 ===================== -->
+    <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <section style="flex:1;min-height:0;display:flex;flex-direction:column">
+      <div style="flex:0 0 auto;background:#fff;border-bottom:1px solid #e6eaf0;padding:13px 22px;display:flex;align-items:center;gap:12px">
+        <div style="position:relative;flex:1;max-width:420px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;color:#9099a6;position:absolute;left:12px;top:50%;transform:translateY(-50%)"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input value="{{ searchVal }}" onInput="{{ onSearch }}" placeholder="按名称模糊搜索工具…" style="width:100%;border:1px solid #e6eaf0;border-radius:9px;background:#f6f8fb;padding:9px 34px 9px 38px;font-size:13.5px;color:#1c2733;outline:none">
+          <sc-if value="{{ searchHas }}"><span onClick="{{ onClearSearch }}" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;background:#e6eaf0;color:#5b6573;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px">✕</span></sc-if>
+        </div>
+        <div style="font-size:12px;color:#9099a6">{{ tbHint }}</div>
+        <div style="flex:1"></div>
+        <button onClick="{{ onNew }}" style="display:flex;align-items:center;gap:7px;background:#2563c9;color:#fff;border:none;border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:0 3px 9px rgba(37,99,201,.3)" style-hover="background:#1c4ea3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:16px;height:16px"><path d="M12 5v14M5 12h14"/></svg>新建工具</button>
+      </div>
+
+      <div style="flex:1;overflow-y:auto;padding:20px 22px 24px;display:flex;flex-direction:column">
+        <div style="font-size:12.5px;color:#5b6573;background:#f6f8fb;border:1px solid #e6eaf0;border-radius:9px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:9px">
+          <span style="font-size:16px">🧰</span>
+          <div><b style="color:#1c2733">Tool 工具</b>：将任意 HTTP API 封装为可被 Agent 调用的自定义工具，一个工具可包含多个 API，支持授权、参数配置与在线校验。</div>
+        </div>
+
+        <sc-if value="{{ listEmpty }}">
+          <div style="text-align:center;padding:54px 20px;color:#9099a6">
+            <div style="font-size:42px;margin-bottom:12px">🔍</div>
+            <div style="font-size:14px;font-weight:600;color:#5b6573">{{ emptyTitle }}</div>
+            <div style="font-size:12.5px;margin-top:5px">{{ emptySub }}</div>
+          </div>
+        </sc-if>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:15px">
+          <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+            <div onClick="{{ c.onOpen }}" style="background:#fff;border:1px solid #e6eaf0;border-radius:13px;padding:16px;display:flex;flex-direction:column;cursor:pointer;transition:.16s;position:relative" style-hover="border-color:#cdd9ec;box-shadow:0 8px 22px rgba(20,35,60,.08);transform:translateY(-2px)">
+              <div style="display:flex;align-items:flex-start;gap:12px">
+                <div style="width:46px;height:46px;border-radius:11px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(135deg,#eef3fb,#e3ecfa);border:1px solid #e1e9f5">{{ c.icon }}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:15px;font-weight:700;color:#1c2733;display:flex;align-items:center;gap:8px;flex-wrap:wrap">{{ c.name }} <span style="font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 7px;background:{{ c.badgeBg }};color:{{ c.badgeColor }};border:1px solid {{ c.badgeBd }}">{{ c.badgeLabel }}</span></div>
+                  <div style="font-size:11px;color:#9099a6;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'SF Mono',Consolas,Menlo,monospace">{{ c.firstUrl }}</div>
+                </div>
+              </div>
+              <div style="font-size:12.5px;color:#5b6573;line-height:1.6;margin:12px 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px">{{ c.desc }}</div>
+              <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding-top:11px;border-top:1px solid #eef1f6">
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#1c4ea3;background:#eef3fb;border-radius:6px;padding:3px 9px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.6 2.6-2-2 2.6-2.6z"/></svg>{{ c.apiCount }} 个 API</span>
+                <span style="flex:1"></span>
+                <span style="font-size:11.5px;color:#9099a6">更新于 {{ c.updatedAt }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ pagerShow }}">
+          <div style="margin-top:18px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ pagerPages }}" as="p" hint-placeholder-count="3">
+              <div onClick="{{ p.onClick }}" style="min-width:34px;height:34px;padding:0 9px;border:{{ p.border }};background:{{ p.bg }};border-radius:8px;font-size:13px;color:{{ p.color }};cursor:{{ p.cursor }};display:flex;align-items:center;justify-content:center;font-weight:600;opacity:{{ p.opacity }}">{{ p.label }}</div>
+            </sc-for>
+            <span style="font-size:12px;color:#9099a6;margin-left:8px">{{ pagerInfo }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- ===================== 视图 2：新建 / 编辑 向导 ===================== -->
+    <sc-if value="{{ isWizard }}">
+    <section style="flex:1;min-height:0;display:flex;flex-direction:column">
+      <div style="flex:1;overflow-y:auto;overflow-x:hidden;padding:26px 0 26px">
+        <div style="max-width:960px;margin:0 auto;padding:0 30px">
+
+          <!-- 步骤条 -->
+          <div style="display:flex;margin-bottom:26px">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+              <div onClick="{{ s.onClick }}" style="flex:1;height:50px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;font-size:14px;font-weight:600;background:{{ s.bg }};color:{{ s.color }};clip-path:{{ s.clip }};margin-left:{{ s.ml }};border:{{ s.border }}">
+                <span style="width:20px;height:20px;border-radius:50%;background:{{ s.badgeBg }};color:{{ s.badgeColor }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">{{ s.n }}</span>{{ s.label }}
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- ---------- 步骤 1：基本信息 ---------- -->
+          <sc-if value="{{ isStep1 }}">
+          <div>
+            <div style="margin-bottom:20px">
+              <div style="font-size:13px;color:#8b95a3;margin-bottom:8px">工具名称 <span style="color:#f0743d">*</span></div>
+              <div style="position:relative">
+                <input value="{{ b_name }}" onInput="{{ onName }}" maxlength="100" placeholder="请输入工具名称" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 60px 10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff">
+                <span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ nameLen }}/100</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom:20px">
+              <div style="font-size:13px;color:#8b95a3;margin-bottom:8px">工具描述 <span style="color:#f0743d">*</span></div>
+              <div style="position:relative">
+                <textarea value="{{ b_desc }}" onInput="{{ onDesc }}" maxlength="200" placeholder="请输入工具描述" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 13px 22px;font-size:13.5px;color:#1c2733;outline:none;background:#fff;resize:vertical;min-height:84px;line-height:1.6"></textarea>
+                <span style="position:absolute;right:13px;bottom:9px;font-size:12px;color:#b8bfc9">{{ descLen }}/200</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom:20px">
+              <div style="font-size:13px;color:#8b95a3;margin-bottom:8px">工具图标 <span style="color:#f0743d">*</span></div>
+              <div style="position:relative;display:inline-block">
+                <div onClick="{{ onIconToggle }}" style="width:66px;height:66px;border-radius:14px;border:1px solid #e1e9f5;background:linear-gradient(135deg,#eef3fb,#e3ecfa);display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;position:relative" style-hover="border-color:#2563c9">
+                  {{ b_icon }}
+                  <span style="position:absolute;right:-4px;bottom:-4px;width:24px;height:24px;border-radius:50%;background:#2563c9;border:2px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></span>
+                </div>
+                <sc-if value="{{ iconOpen }}">
+                  <div style="position:absolute;top:74px;left:0;z-index:30;background:#fff;border:1px solid #e6eaf0;border-radius:12px;box-shadow:0 14px 36px rgba(20,35,60,.16);padding:10px;display:grid;grid-template-columns:repeat(8,1fr);gap:4px;width:336px">
+                    <sc-for list="{{ icons }}" as="ic" hint-placeholder-count="24">
+                      <div onClick="{{ ic.onPick }}" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;background:{{ ic.bg }};box-shadow:{{ ic.ring }}" style-hover="background:#f6f8fb">{{ ic.ic }}</div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+
+            <div style="margin-bottom:20px">
+              <div style="font-size:13px;color:#8b95a3;margin-bottom:8px">授权方式 <span style="color:#f0743d">*</span></div>
+              <div style="position:relative">
+                <select value="{{ b_authType }}" onChange="{{ onAuth }}" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff;-webkit-appearance:none;appearance:none;cursor:pointer">
+                  <option value="none">不授权</option>
+                  <option value="apikey">APIkey</option>
+                  <option value="oauth2">Oauth 2.0</option>
+                </select>
+                <span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);color:#9099a6;pointer-events:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M6 9l6 6 6-6"/></svg></span>
+              </div>
+            </div>
+
+            <!-- APIkey 配置块 -->
+            <sc-if value="{{ isApikey }}">
+              <div style="background:#f7f8fa;border:1px solid #eef1f6;border-radius:10px;padding:18px 20px;margin-bottom:8px">
+                <div style="font-size:13px;color:#8b95a3;margin-bottom:11px;display:flex;align-items:center;gap:4px">密钥位置 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;color:#c2cad8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 4M12 17h.01"/></svg><span style="color:#f0743d">*</span></div>
+                <div style="display:flex;gap:34px;margin-bottom:18px">
+                  <div onClick="{{ onAkHeader }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px">
+                    <span style="width:16px;height:16px;border-radius:50%;border:1.6px solid {{ akHeaderBd }};display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ akHeaderDot }}"></span></span>Header
+                  </div>
+                  <div onClick="{{ onAkQuery }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px">
+                    <span style="width:16px;height:16px;border-radius:50%;border:1.6px solid {{ akQueryBd }};display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ akQueryDot }}"></span></span>Query
+                  </div>
+                </div>
+                <div style="margin-bottom:16px">
+                  <div style="font-size:13px;color:#8b95a3;margin-bottom:8px">密钥参数名 <span style="color:#f0743d">*</span></div>
+                  <div style="position:relative">
+                    <input value="{{ ak_name }}" onInput="{{ onAkName }}" maxlength="100" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 60px 10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff">
+                    <span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ akNameLen }}/100</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:13px;color:#8b95a3;margin-bottom:8px">密钥值 <span style="color:#f0743d">*</span></div>
+                  <div style="position:relative">
+                    <input type="password" value="{{ ak_val }}" onInput="{{ onAkVal }}" maxlength="2000" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 66px 10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff">
+                    <span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ akValLen }}/2000</span>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- OAuth 2.0 配置块 -->
+            <sc-if value="{{ isOauth }}">
+              <div style="background:#f7f8fa;border:1px solid #eef1f6;border-radius:10px;padding:18px 20px;margin-bottom:8px">
+                <div style="margin-bottom:16px">
+                  <div style="font-size:13px;color:#8b95a3;margin-bottom:8px;display:flex;align-items:center;gap:4px">ClientId <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;color:#c2cad8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 4M12 17h.01"/></svg><span style="color:#f0743d">*</span></div>
+                  <div style="position:relative"><input value="{{ o_cid }}" onInput="{{ onOCid }}" maxlength="100" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 60px 10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff"><span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ oCidLen }}/100</span></div>
+                </div>
+                <div style="margin-bottom:16px">
+                  <div style="font-size:13px;color:#8b95a3;margin-bottom:8px;display:flex;align-items:center;gap:4px">ClientSecret <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;color:#c2cad8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 4M12 17h.01"/></svg><span style="color:#f0743d">*</span></div>
+                  <div style="position:relative"><input type="password" value="{{ o_sec }}" onInput="{{ onOSec }}" maxlength="100" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 60px 10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff"><span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ oSecLen }}/100</span></div>
+                </div>
+                <div style="margin-bottom:16px">
+                  <div style="font-size:13px;color:#8b95a3;margin-bottom:8px;display:flex;align-items:center;gap:4px">AuthorizationUrl <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;color:#c2cad8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 4M12 17h.01"/></svg><span style="color:#f0743d">*</span></div>
+                  <div style="position:relative"><input value="{{ o_authUrl }}" onInput="{{ onOAuthUrl }}" maxlength="100" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 60px 10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff"><span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ oAuthLen }}/100</span></div>
+                </div>
+                <div style="margin-bottom:16px">
+                  <div style="font-size:13px;color:#8b95a3;margin-bottom:8px;display:flex;align-items:center;gap:4px">Scope <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;color:#c2cad8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 4M12 17h.01"/></svg></div>
+                  <textarea value="{{ o_scope }}" onInput="{{ onOScope }}" placeholder="请输入，多个以逗号或分号区分，以 enter 完成输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff;resize:vertical;min-height:96px;line-height:1.6"></textarea>
+                </div>
+                <div>
+                  <div style="font-size:13px;color:#8b95a3;margin-bottom:8px;display:flex;align-items:center;gap:4px">TokenUrl <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;color:#c2cad8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 4M12 17h.01"/></svg><span style="color:#f0743d">*</span></div>
+                  <div style="position:relative"><input value="{{ o_tokenUrl }}" onInput="{{ onOTokenUrl }}" maxlength="100" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:10px 60px 10px 13px;font-size:13.5px;color:#1c2733;outline:none;background:#fff"><span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ oTokLen }}/100</span></div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          </sc-if>
+
+          <!-- ---------- 步骤 2：添加工具(API) ---------- -->
+          <sc-if value="{{ isStep2 }}">
+          <div>
+            <!-- API tabs 行 -->
+            <div style="display:flex;align-items:center;border-bottom:1px solid #e6eaf0;margin-bottom:20px">
+              <div style="display:flex;align-items:flex-end;gap:2px;flex:1;overflow-x:auto">
+                <sc-for list="{{ apiTabs }}" as="t" hint-placeholder-count="1">
+                  <div onClick="{{ t.onClick }}" style="padding:10px 16px;font-size:13.5px;font-weight:600;color:{{ t.color }};cursor:pointer;border-bottom:2.5px solid {{ t.bd }};margin-bottom:-1px;display:flex;align-items:center;gap:7px;white-space:nowrap">{{ t.name }}<sc-if value="{{ t.showDel }}"><span onClick="{{ t.onDel }}" style="color:#c2cad8;display:flex" style-hover="color:#d0584f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></span></sc-if></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:8px;padding:6px 0 6px 10px;flex:0 0 auto">
+                <div onClick="{{ onAddApi }}" style="display:flex;align-items:center;gap:4px;border:1px solid #e6eaf0;background:#fff;border-radius:7px;padding:6px 11px;font-size:12.5px;color:#5b6573;cursor:pointer;font-weight:500" style-hover="color:#2563c9;border-color:#cdd9ec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 5v14M5 12h14"/></svg>工具</div>
+                <div onClick="{{ onYaml }}" style="border:1px solid #e6eaf0;background:#fff;border-radius:7px;padding:6px 11px;font-size:12.5px;color:#5b6573;cursor:pointer;font-weight:500" style-hover="color:#2563c9;border-color:#cdd9ec">yaml添加</div>
+                <div onClick="{{ onJson }}" style="border:1px solid #e6eaf0;background:#fff;border-radius:7px;padding:6px 11px;font-size:12.5px;color:#5b6573;cursor:pointer;font-weight:500" style-hover="color:#2563c9;border-color:#cdd9ec">json添加</div>
+              </div>
+            </div>
+
+            <!-- 基础信息 -->
+            <div style="font-size:14px;font-weight:700;color:#1c2733;margin-bottom:18px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:14px;border-radius:2px;background:#2563c9"></span>基础信息</div>
+
+            <div style="display:grid;grid-template-columns:96px 1fr;gap:14px 16px;align-items:center;margin-bottom:24px">
+              <div style="font-size:13px;color:#8b95a3;text-align:right">工具名称 <span style="color:#f0743d">*</span></div>
+              <div style="position:relative"><input value="{{ a_name }}" onInput="{{ onAName }}" maxlength="100" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:9px 60px 9px 12px;font-size:13.5px;color:#1c2733;outline:none;background:#fff"><span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ aNameLen }}/100</span></div>
+
+              <div style="font-size:13px;color:#8b95a3;text-align:right">调用地址 <span style="color:#f0743d">*</span></div>
+              <input value="{{ a_url }}" onInput="{{ onAUrl }}" placeholder="请输入 API 调用地址" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:9px 12px;font-size:13.5px;color:#1c2733;outline:none;background:#fff;font-family:'SF Mono',Consolas,Menlo,monospace">
+
+              <div style="font-size:13px;color:#8b95a3;text-align:right">请求方式 <span style="color:#f0743d">*</span></div>
+              <div style="display:flex;gap:34px">
+                <div onClick="{{ onMGet }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px"><span style="width:16px;height:16px;border-radius:50%;border:1.6px solid {{ mGetBd }};display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ mGetDot }}"></span></span>GET</div>
+                <div onClick="{{ onMPost }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px"><span style="width:16px;height:16px;border-radius:50%;border:1.6px solid {{ mPostBd }};display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ mPostDot }}"></span></span>POST</div>
+              </div>
+
+              <div style="font-size:13px;color:#8b95a3;text-align:right">调用方式 <span style="color:#f0743d">*</span></div>
+              <div style="display:flex;gap:34px">
+                <div onClick="{{ onCStream }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px"><span style="width:16px;height:16px;border-radius:50%;border:1.6px solid {{ cStreamBd }};display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ cStreamDot }}"></span></span>流式</div>
+                <div onClick="{{ onCSync }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px"><span style="width:16px;height:16px;border-radius:50%;border:1.6px solid {{ cSyncBd }};display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ cSyncDot }}"></span></span>非流式</div>
+              </div>
+
+              <div style="font-size:13px;color:#8b95a3;text-align:right">工具描述 <span style="color:#f0743d">*</span></div>
+              <div style="position:relative"><input value="{{ a_desc }}" onInput="{{ onADesc }}" maxlength="200" placeholder="请输入" style="width:100%;border:1px solid #e6eaf0;border-radius:8px;padding:9px 60px 9px 12px;font-size:13.5px;color:#1c2733;outline:none;background:#fff"><span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:#b8bfc9">{{ aDescLen }}/200</span></div>
+            </div>
+
+            <!-- API参数 -->
+            <div style="font-size:14px;font-weight:700;color:#1c2733;margin:6px 0 16px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:14px;border-radius:2px;background:#2563c9"></span>API参数</div>
+
+            <!-- header -->
+            <div style="display:flex;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:600;color:#1c2733">header</span><span style="flex:1"></span><span onClick="{{ onAddHeader }}" style="display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:#2563c9;cursor:pointer;font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 5v14M5 12h14"/></svg>添加</span></div>
+            <div style="border:1px solid #e6eaf0;border-radius:9px;overflow:hidden;margin-bottom:20px">
+              <div style="display:grid;grid-template-columns:1.3fr 1.5fr 130px 56px 1.1fr 60px 38px;background:#f6f8fb;border-bottom:1px solid #eef1f6">
+                <div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数名称 <span style="color:#f0743d">*</span></div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数描述</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数类型 <span style="color:#f0743d">*</span></div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 6px;text-align:center">必填</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">默认值</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 6px;text-align:center">开启</div><div></div>
+              </div>
+              <sc-if value="{{ headerEmpty }}"><div style="padding:14px;text-align:center;font-size:12px;color:#9099a6">暂无参数</div></sc-if>
+              <sc-for list="{{ headerParams }}" as="p" hint-placeholder-count="0">
+                <div style="display:grid;grid-template-columns:1.3fr 1.5fr 130px 56px 1.1fr 60px 38px;border-bottom:1px solid #eef1f6;align-items:center">
+                  <div style="padding:6px 8px"><input value="{{ p.name }}" onInput="{{ p.onName }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px"><input value="{{ p.desc }}" onInput="{{ p.onDesc }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px;position:relative"><select value="{{ p.type }}" onChange="{{ p.onType }}" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 22px 6px 8px;font-size:12.5px;outline:none;background:#fff;-webkit-appearance:none;appearance:none;cursor:pointer"><option value="string">string</option><option value="int">int</option><option value="float">float</option><option value="boolean">boolean</option><option value="object">object</option><option value="array">array</option></select><span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#9099a6;pointer-events:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></span></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><input type="checkbox" checked="{{ p.required }}" onChange="{{ p.onReq }}" style="width:16px;height:16px;accent-color:#2563c9;cursor:pointer"></div>
+                  <div style="padding:6px 8px"><input value="{{ p.def }}" onInput="{{ p.onDef }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><div onClick="{{ p.onToggle }}" style="width:34px;height:19px;border-radius:10px;background:{{ p.enabledBg }};position:relative;cursor:pointer;transition:.15s"><span style="position:absolute;top:2px;left:{{ p.knobLeft }};width:15px;height:15px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></div></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><span onClick="{{ p.onDel }}" style="width:26px;height:26px;border-radius:6px;border:1px solid #e6eaf0;background:#fff;color:#9099a6;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#d0584f;border-color:#f3cdc9;background:#fbeceb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14"/></svg></span></div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- query -->
+            <div style="display:flex;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:600;color:#1c2733">query</span><span style="flex:1"></span><span onClick="{{ onAddQuery }}" style="display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:#2563c9;cursor:pointer;font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 5v14M5 12h14"/></svg>添加</span></div>
+            <div style="border:1px solid #e6eaf0;border-radius:9px;overflow:hidden;margin-bottom:20px">
+              <div style="display:grid;grid-template-columns:1.3fr 1.5fr 130px 56px 1.1fr 60px 38px;background:#f6f8fb;border-bottom:1px solid #eef1f6">
+                <div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数名称 <span style="color:#f0743d">*</span></div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数描述</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数类型 <span style="color:#f0743d">*</span></div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 6px;text-align:center">必填</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">默认值</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 6px;text-align:center">开启</div><div></div>
+              </div>
+              <sc-if value="{{ queryEmpty }}"><div style="padding:14px;text-align:center;font-size:12px;color:#9099a6">暂无参数</div></sc-if>
+              <sc-for list="{{ queryParams }}" as="p" hint-placeholder-count="0">
+                <div style="display:grid;grid-template-columns:1.3fr 1.5fr 130px 56px 1.1fr 60px 38px;border-bottom:1px solid #eef1f6;align-items:center">
+                  <div style="padding:6px 8px"><input value="{{ p.name }}" onInput="{{ p.onName }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px"><input value="{{ p.desc }}" onInput="{{ p.onDesc }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px;position:relative"><select value="{{ p.type }}" onChange="{{ p.onType }}" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 22px 6px 8px;font-size:12.5px;outline:none;background:#fff;-webkit-appearance:none;appearance:none;cursor:pointer"><option value="string">string</option><option value="int">int</option><option value="float">float</option><option value="boolean">boolean</option><option value="object">object</option><option value="array">array</option></select><span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#9099a6;pointer-events:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></span></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><input type="checkbox" checked="{{ p.required }}" onChange="{{ p.onReq }}" style="width:16px;height:16px;accent-color:#2563c9;cursor:pointer"></div>
+                  <div style="padding:6px 8px"><input value="{{ p.def }}" onInput="{{ p.onDef }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><div onClick="{{ p.onToggle }}" style="width:34px;height:19px;border-radius:10px;background:{{ p.enabledBg }};position:relative;cursor:pointer;transition:.15s"><span style="position:absolute;top:2px;left:{{ p.knobLeft }};width:15px;height:15px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></div></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><span onClick="{{ p.onDel }}" style="width:26px;height:26px;border-radius:6px;border:1px solid #e6eaf0;background:#fff;color:#9099a6;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#d0584f;border-color:#f3cdc9;background:#fbeceb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14"/></svg></span></div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- body -->
+            <div style="display:flex;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:600;color:#1c2733">body</span><span style="flex:1"></span><span onClick="{{ onAddBody }}" style="display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:{{ bodyAddColor }};cursor:{{ bodyAddCursor }};font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 5v14M5 12h14"/></svg>添加</span></div>
+            <div style="border:1px solid #e6eaf0;border-radius:9px;overflow:hidden;margin-bottom:20px">
+              <div style="display:grid;grid-template-columns:1.3fr 1.5fr 130px 56px 1.1fr 60px 38px;background:#f6f8fb;border-bottom:1px solid #eef1f6">
+                <div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数名称 <span style="color:#f0743d">*</span></div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数描述</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数类型 <span style="color:#f0743d">*</span></div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 6px;text-align:center">必填</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">默认值</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 6px;text-align:center">开启</div><div></div>
+              </div>
+              <sc-if value="{{ bodyDisabled }}"><div style="padding:14px;text-align:center;font-size:12px;color:#9099a6">GET 请求不支持 body 参数</div></sc-if>
+              <sc-if value="{{ bodyEmpty }}"><div style="padding:14px;text-align:center;font-size:12px;color:#9099a6">暂无参数</div></sc-if>
+              <sc-for list="{{ bodyParams }}" as="p" hint-placeholder-count="0">
+                <div style="display:grid;grid-template-columns:1.3fr 1.5fr 130px 56px 1.1fr 60px 38px;border-bottom:1px solid #eef1f6;align-items:center">
+                  <div style="padding:6px 8px"><input value="{{ p.name }}" onInput="{{ p.onName }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px"><input value="{{ p.desc }}" onInput="{{ p.onDesc }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px;position:relative"><select value="{{ p.type }}" onChange="{{ p.onType }}" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 22px 6px 8px;font-size:12.5px;outline:none;background:#fff;-webkit-appearance:none;appearance:none;cursor:pointer"><option value="string">string</option><option value="int">int</option><option value="float">float</option><option value="boolean">boolean</option><option value="object">object</option><option value="array">array</option></select><span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#9099a6;pointer-events:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></span></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><input type="checkbox" checked="{{ p.required }}" onChange="{{ p.onReq }}" style="width:16px;height:16px;accent-color:#2563c9;cursor:pointer"></div>
+                  <div style="padding:6px 8px"><input value="{{ p.def }}" onInput="{{ p.onDef }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><div onClick="{{ p.onToggle }}" style="width:34px;height:19px;border-radius:10px;background:{{ p.enabledBg }};position:relative;cursor:pointer;transition:.15s"><span style="position:absolute;top:2px;left:{{ p.knobLeft }};width:15px;height:15px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></div></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><span onClick="{{ p.onDel }}" style="width:26px;height:26px;border-radius:6px;border:1px solid #e6eaf0;background:#fff;color:#9099a6;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#d0584f;border-color:#f3cdc9;background:#fbeceb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14"/></svg></span></div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- outputs -->
+            <div style="display:flex;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:600;color:#1c2733">outputs</span><span style="flex:1"></span><span onClick="{{ onAddOutput }}" style="display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:#2563c9;cursor:pointer;font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 5v14M5 12h14"/></svg>添加</span></div>
+            <div style="border:1px solid #e6eaf0;border-radius:9px;overflow:hidden;margin-bottom:8px">
+              <div style="display:grid;grid-template-columns:1.5fr 1.7fr 1fr 38px;background:#f6f8fb;border-bottom:1px solid #eef1f6">
+                <div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数名称 <span style="color:#f0743d">*</span></div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数描述</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 10px">参数类型 <span style="color:#f0743d">*</span></div><div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;padding:9px 10px;border-bottom:1px solid #eef1f6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;color:#5b6573"><path d="M6 9l6 6 6-6"/></svg><span style="font-size:12.5px;font-weight:600;color:#1c2733;font-family:'SF Mono',Consolas,Menlo,monospace">Output</span><span style="font-size:12px;color:#9099a6;margin-left:14px">输出内容</span></div>
+              <sc-if value="{{ outputEmpty }}"><div style="padding:14px 14px 14px 30px;text-align:left;font-size:12px;color:#9099a6">暂无输出字段，点击「添加」新增</div></sc-if>
+              <sc-for list="{{ outputRows }}" as="o" hint-placeholder-count="0">
+                <div style="display:grid;grid-template-columns:1.5fr 1.7fr 1fr 38px;border-bottom:1px solid #eef1f6;align-items:center">
+                  <div style="padding:6px 8px 6px 26px;position:relative"><span style="position:absolute;left:12px;top:0;bottom:0;width:1px;background:#e6eaf0"></span><span style="position:absolute;left:12px;top:50%;width:10px;height:1px;background:#e6eaf0"></span><input value="{{ o.name }}" onInput="{{ o.onName }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px"><input value="{{ o.desc }}" onInput="{{ o.onDesc }}" placeholder="请输入" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 8px;font-size:12.5px;outline:none;background:#fff"></div>
+                  <div style="padding:6px 8px;position:relative"><select value="{{ o.type }}" onChange="{{ o.onType }}" style="width:100%;min-width:0;border:1px solid #e6eaf0;border-radius:6px;padding:6px 22px 6px 8px;font-size:12.5px;outline:none;background:#fff;-webkit-appearance:none;appearance:none;cursor:pointer"><option value="string">string</option><option value="int">int</option><option value="float">float</option><option value="boolean">boolean</option><option value="object">object</option><option value="array">array</option></select><span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#9099a6;pointer-events:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></span></div>
+                  <div style="padding:6px;display:flex;justify-content:center"><span onClick="{{ o.onDel }}" style="width:26px;height:26px;border-radius:6px;border:1px solid #e6eaf0;background:#fff;color:#9099a6;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#d0584f;border-color:#f3cdc9;background:#fbeceb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ---------- 步骤 3：校验工具(API) ---------- -->
+          <sc-if value="{{ isStep3 }}">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#1c2733;margin-bottom:16px">工具(API)</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ vList }}" as="v" hint-placeholder-count="1">
+                <div style="background:#fff;border:1px solid #e6eaf0;border-radius:12px;padding:16px 18px;display:flex;align-items:flex-start;gap:14px">
+                  <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:14px;font-weight:700;color:#1c2733">{{ v.name }}</span><span style="font-size:11px;font-weight:600;border-radius:5px;padding:2px 9px;background:{{ v.statusBg }};color:{{ v.statusColor }};border:1px solid {{ v.statusBd }}">{{ v.statusLabel }}</span></div>
+                    <div style="font-size:12.5px;color:#5b6573;line-height:1.6">{{ v.desc }}</div>
+                    <sc-if value="{{ v.hasUrl }}"><div style="font-size:11.5px;color:#9099a6;margin-top:6px;font-family:'SF Mono',Consolas,Menlo,monospace">{{ v.method }} · {{ v.url }}</div></sc-if>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:16px;flex:0 0 auto;padding-top:2px">
+                    <span onClick="{{ v.onValidate }}" style="font-size:13px;font-weight:600;color:{{ v.validateColor }};cursor:pointer;display:flex;align-items:center;gap:6px">
+                      <sc-if value="{{ v.validating }}"><span style="width:13px;height:13px;border:2px solid #cfe0ff;border-top-color:#2563c9;border-radius:50%;animation:spin .7s linear infinite;display:inline-block"></span></sc-if>
+                      {{ v.validateLabel }}
+                    </span>
+                    <span onClick="{{ v.onSample }}" style="font-size:13px;color:#9099a6;cursor:pointer" style-hover="color:#2563c9">查看示例</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+        </div>
+      </div>
+
+      <!-- 向导底部按钮 -->
+      <div style="flex:0 0 auto;border-top:1px solid #e6eaf0;background:#fff;padding:14px 22px">
+        <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:12px">
+          <sc-if value="{{ showPrev }}"><button onClick="{{ onPrev }}" style="border-radius:8px;padding:9px 26px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #e6eaf0;background:#fff;color:#5b6573" style-hover="border-color:#cdd9ec">上一步</button></sc-if>
+          <sc-if value="{{ showNext }}"><button onClick="{{ onNext }}" style="border-radius:8px;padding:9px 26px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #2563c9;background:#2563c9;color:#fff;box-shadow:0 3px 9px rgba(37,99,201,.3)" style-hover="background:#1c4ea3">下一步</button></sc-if>
+          <sc-if value="{{ showSave }}"><button onClick="{{ onSave }}" style="border-radius:8px;padding:9px 30px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #2563c9;background:#2563c9;color:#fff;box-shadow:0 3px 9px rgba(37,99,201,.3)" style-hover="background:#1c4ea3">保存</button></sc-if>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- ===================== 视图 3：详情 ===================== -->
+    <sc-if value="{{ isDetail }}">
+    <section style="flex:1;min-height:0;display:flex;flex-direction:column">
+      <div style="flex:1;overflow-y:auto;padding:24px 0 40px">
+        <div style="max-width:1020px;margin:0 auto;padding:0 28px">
+          <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:22px">
+            <div style="width:60px;height:60px;border-radius:14px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:30px;background:linear-gradient(135deg,#eef3fb,#e3ecfa);border:1px solid #e1e9f5">{{ d_icon }}</div>
+            <div style="flex:1;min-width:0;padding-top:2px">
+              <div style="font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap">{{ d_name }} <span style="font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 7px;background:{{ d_badgeBg }};color:{{ d_badgeColor }};border:1px solid {{ d_badgeBd }}">{{ d_badgeLabel }}</span></div>
+              <div style="font-size:12.5px;color:#9099a6;margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap"><span style="color:#1c4ea3;font-weight:600">@{{ d_owner }}</span><span>·</span><span>创建于 {{ d_created }}</span><span>·</span><span>更新于 {{ d_updated }}</span></div>
+            </div>
+            <div style="flex:0 0 auto;border:1px solid #e6eaf0;border-radius:11px;padding:10px 20px;text-align:center;background:#f6f8fb"><div style="font-size:24px;font-weight:800;color:#1c4ea3;line-height:1.1">{{ d_apiCount }}</div><div style="font-size:11px;color:#9099a6;margin-top:2px">API 数量</div></div>
+          </div>
+
+          <div style="display:inline-flex;gap:4px;background:#f6f8fb;border:1px solid #e6eaf0;border-radius:10px;padding:4px;margin-bottom:20px">
+            <div onClick="{{ onTabOverview }}" style="padding:7px 18px;font-size:13px;font-weight:600;color:{{ ovColor }};border-radius:7px;cursor:pointer;background:{{ ovBg }};box-shadow:{{ ovShadow }}">概览</div>
+            <div onClick="{{ onTabApis }}" style="padding:7px 18px;font-size:13px;font-weight:600;color:{{ apColor }};border-radius:7px;cursor:pointer;background:{{ apBg }};box-shadow:{{ apShadow }}">API 配置</div>
+          </div>
+
+          <!-- 概览 -->
+          <sc-if value="{{ isOverview }}">
+          <div>
+            <div style="margin-bottom:22px">
+              <div style="font-size:13px;font-weight:700;color:#1c2733;margin-bottom:11px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:13px;border-radius:2px;background:#2563c9"></span>描述</div>
+              <div style="font-size:13px;color:#5b6573;line-height:1.7">{{ d_desc }}</div>
+            </div>
+            <div style="margin-bottom:22px">
+              <div style="font-size:13px;font-weight:700;color:#1c2733;margin-bottom:11px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:13px;border-radius:2px;background:#2563c9"></span>授权配置</div>
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+                <div style="border:1px solid #e6eaf0;border-radius:10px;padding:11px 14px;background:#fff"><div style="font-size:11px;color:#9099a6;margin-bottom:4px">授权方式</div><div style="font-size:13px;color:#1c2733;font-weight:600">{{ d_authLabel }}</div></div>
+                <sc-for list="{{ d_authCells }}" as="a" hint-placeholder-count="0">
+                  <div style="border:1px solid #e6eaf0;border-radius:10px;padding:11px 14px;background:#fff;grid-column:{{ a.span }}"><div style="font-size:11px;color:#9099a6;margin-bottom:4px">{{ a.label }}</div><div style="font-size:13px;color:#1c2733;font-weight:600;word-break:break-all;font-family:{{ a.font }}">{{ a.value }}</div></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- API 配置 -->
+          <sc-if value="{{ isApis }}">
+          <div>
+            <div style="display:flex;gap:4px;border-bottom:1px solid #e6eaf0;margin-bottom:18px;flex-wrap:wrap">
+              <sc-for list="{{ d_apiTabs }}" as="t" hint-placeholder-count="1">
+                <div onClick="{{ t.onClick }}" style="padding:9px 15px;font-size:13px;font-weight:600;color:{{ t.color }};cursor:pointer;border-bottom:2.5px solid {{ t.bd }};margin-bottom:-1px;display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:{{ t.dot }}"></span>{{ t.name }}</div>
+              </sc-for>
+            </div>
+
+            <div style="margin-bottom:6px">
+              <div style="font-size:12.5px;font-weight:700;color:#1c2733;margin-bottom:10px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:13px;border-radius:2px;background:#2563c9"></span>基础信息</div>
+              <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px dashed #e6eaf0"><div style="font-size:12.5px;color:#9099a6;width:84px;flex:0 0 auto">工具名称</div><div style="font-size:12.5px;color:#1c2733;flex:1;font-family:'SF Mono',Consolas,Menlo,monospace">{{ da_name }}</div></div>
+              <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px dashed #e6eaf0"><div style="font-size:12.5px;color:#9099a6;width:84px;flex:0 0 auto">调用地址</div><div style="font-size:12.5px;color:#1c2733;flex:1;font-family:'SF Mono',Consolas,Menlo,monospace;word-break:break-all">{{ da_url }}</div></div>
+              <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px dashed #e6eaf0"><div style="font-size:12.5px;color:#9099a6;width:84px;flex:0 0 auto">请求方式</div><div style="font-size:12.5px;color:#1c2733;flex:1"><span style="font-size:11px;font-weight:700;border-radius:5px;padding:1px 8px;background:#eef3fb;color:#1c4ea3">{{ da_method }}</span></div></div>
+              <div style="display:flex;gap:14px;padding:9px 0;border-bottom:1px dashed #e6eaf0"><div style="font-size:12.5px;color:#9099a6;width:84px;flex:0 0 auto">调用方式</div><div style="font-size:12.5px;color:#1c2733;flex:1">{{ da_callMode }}</div></div>
+              <div style="display:flex;gap:14px;padding:9px 0"><div style="font-size:12.5px;color:#9099a6;width:84px;flex:0 0 auto">工具描述</div><div style="font-size:12.5px;color:#1c2733;flex:1;line-height:1.6">{{ da_desc }}</div></div>
+            </div>
+
+            <sc-for list="{{ da_groups }}" as="g" hint-placeholder-count="0">
+              <div style="margin-top:18px">
+                <div style="font-size:12.5px;font-weight:700;color:#1c2733;margin-bottom:10px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:13px;border-radius:2px;background:#2563c9"></span>{{ g.title }}</div>
+                <div style="border:1px solid #e6eaf0;border-radius:9px;overflow:hidden">
+                  <div style="display:grid;grid-template-columns:1.3fr 2fr 90px 70px 1fr;background:#f6f8fb;border-bottom:1px solid #eef1f6">
+                    <div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">参数名称</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">参数描述</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">类型</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">必填</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">默认值</div>
+                  </div>
+                  <sc-if value="{{ g.empty }}"><div style="padding:14px;text-align:center;font-size:12px;color:#9099a6;background:#fff">暂无参数</div></sc-if>
+                  <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="0">
+                    <div style="display:grid;grid-template-columns:1.3fr 2fr 90px 70px 1fr;border-bottom:1px solid #eef1f6;background:#fff">
+                      <div style="padding:9px 12px;font-size:12px;color:#1c4ea3;font-weight:600;font-family:'SF Mono',Consolas,Menlo,monospace">{{ r.name }}</div><div style="padding:9px 12px;font-size:12px;color:#5b6573">{{ r.desc }}</div><div style="padding:9px 12px;font-size:11.5px;color:#7a52c4;font-family:'SF Mono',Consolas,Menlo,monospace">{{ r.type }}</div><div style="padding:9px 12px">{{ r.req }}</div><div style="padding:9px 12px;font-size:12px;color:#5b6573;font-family:'SF Mono',Consolas,Menlo,monospace">{{ r.def }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+
+            <div style="margin-top:18px">
+              <div style="font-size:12.5px;font-weight:700;color:#1c2733;margin-bottom:10px;display:flex;align-items:center;gap:8px"><span style="width:3px;height:13px;border-radius:2px;background:#2563c9"></span>输出参数</div>
+              <div style="border:1px solid #e6eaf0;border-radius:9px;overflow:hidden">
+                <div style="display:grid;grid-template-columns:1.6fr 2fr 1fr;background:#f6f8fb;border-bottom:1px solid #eef1f6">
+                  <div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">参数名称</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">参数描述</div><div style="font-size:11.5px;font-weight:700;color:#8b95a3;padding:9px 12px">类型</div>
+                </div>
+                <div style="display:grid;grid-template-columns:1.6fr 2fr 1fr;border-bottom:1px solid #eef1f6;background:#fff"><div style="padding:9px 12px;font-size:12px;color:#1c4ea3;font-weight:600;font-family:'SF Mono',Consolas,Menlo,monospace">Output</div><div style="padding:9px 12px;font-size:12px;color:#5b6573">输出内容</div><div style="padding:9px 12px;font-size:11.5px;color:#7a52c4;font-family:'SF Mono',Consolas,Menlo,monospace">object</div></div>
+                <sc-if value="{{ da_outEmpty }}"><div style="padding:14px;text-align:center;font-size:12px;color:#9099a6;background:#fff">暂无输出字段</div></sc-if>
+                <sc-for list="{{ da_outputs }}" as="o" hint-placeholder-count="0">
+                  <div style="display:grid;grid-template-columns:1.6fr 2fr 1fr;border-bottom:1px solid #eef1f6;background:#fff"><div style="padding:9px 12px 9px 30px;font-size:12px;color:#1c2733;font-weight:600;font-family:'SF Mono',Consolas,Menlo,monospace;position:relative"><span style="position:absolute;left:16px;color:#c2cad8">└</span>{{ o.name }}</div><div style="padding:9px 12px;font-size:12px;color:#5b6573">{{ o.desc }}</div><div style="padding:9px 12px;font-size:11.5px;color:#7a52c4;font-family:'SF Mono',Consolas,Menlo,monospace">{{ o.type }}</div></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+  </div>
+
+  <!-- ===================== 新建方式选择 ===================== -->
+  <sc-if value="{{ createChoiceShow }}">
+    <div onClick="{{ onCreateChoiceCancel }}" style="position:fixed;inset:0;background:rgba(18,28,45,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px">
+      <div onClick="{{ stop }}" style="background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(15,25,45,.3);width:100%;max-width:560px;overflow:hidden;animation:pop .2s ease">
+        <div style="padding:18px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e6eaf0">
+          <div style="width:38px;height:38px;border-radius:11px;background:#eef3fb;display:flex;align-items:center;justify-content:center;font-size:21px;flex:0 0 auto">🧰</div>
+          <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:700;color:#1c2733">新建工具</div><div style="font-size:12.5px;color:#9099a6;margin-top:4px">选择创建方式，快速接入一个新的自定义工具</div></div>
+          <button onClick="{{ onCreateChoiceCancel }}" aria-label="关闭" style="width:32px;height:32px;border:1px solid #e6eaf0;border-radius:8px;background:#fff;color:#9099a6;font-size:20px;line-height:1;cursor:pointer">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:20px">
+          <button onClick="{{ onManualCreate }}" style="position:relative;min-height:168px;border:1px solid #e6eaf0;border-radius:12px;background:#fff;padding:20px 16px 17px;font-family:inherit;color:#1c2733;text-align:center;cursor:pointer" style-hover="border-color:#2563c9;box-shadow:0 0 0 3px #eef3fb">
+            <span style="width:52px;height:52px;border-radius:14px;background:#f6f8fb;display:flex;align-items:center;justify-content:center;margin:0 auto 13px;font-size:25px">🕹️</span>
+            <span style="display:block;font-size:14.5px;font-weight:700">手动创建</span>
+            <span style="display:block;font-size:12.5px;color:#9099a6;line-height:1.55;margin-top:7px">填写工具配置信息并完成创建</span>
+          </button>
+          <div style="position:relative;min-height:168px;border:1px solid #e6eaf0;border-radius:12px;background:#fff;padding:20px 16px 17px;color:#1c2733;text-align:center;cursor:not-allowed">
+            <span style="position:absolute;right:8px;top:8px;border:1px solid #d8c6fb;border-radius:5px;background:#f3edff;color:#7c4dcc;padding:2px 6px;font-size:10.5px;font-weight:700">即将上线</span>
+            <span style="width:52px;height:52px;border-radius:14px;background:#f6f8fb;display:flex;align-items:center;justify-content:center;margin:0 auto 13px;font-size:25px">💬</span>
+            <span style="display:block;font-size:14.5px;font-weight:700">对话创建</span>
+            <span style="display:block;font-size:12.5px;color:#9099a6;line-height:1.55;margin-top:7px">通过自然语言描述需求，辅助生成工具</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== 删除确认 ===================== -->
+  <sc-if value="{{ delShow }}">
+    <div onClick="{{ onDelCancel }}" style="position:fixed;inset:0;background:rgba(18,28,45,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px">
+      <div onClick="{{ stop }}" style="background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(15,25,45,.3);width:100%;max-width:440px;overflow:hidden;animation:pop .2s ease">
+        <div style="padding:22px 22px 0;display:flex;gap:13px;align-items:flex-start">
+          <div style="width:42px;height:42px;border-radius:11px;background:#fbeceb;color:#d0584f;display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/><path d="M10 11v6M14 11v6"/></svg></div>
+          <div><div style="font-size:16px;font-weight:700">删除工具</div><div style="font-size:13px;color:#5b6573;margin-top:5px;line-height:1.55">确定删除工具 <b style="color:#1c2733">{{ delName }}</b> 吗？该操作不可撤销，其包含的 {{ delCount }} 个 API 将一并移除。</div></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:20px 22px;justify-content:flex-end">
+          <button onClick="{{ onDelCancel }}" style="border-radius:9px;padding:9px 22px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #e6eaf0;background:#fff;color:#5b6573" style-hover="border-color:#cdd9ec">取消</button>
+          <button onClick="{{ onDelConfirm }}" style="border-radius:9px;padding:9px 22px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #d0584f;background:#d0584f;color:#fff" style-hover="background:#bd463d">确认删除</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== yaml / json 导入 ===================== -->
+  <sc-if value="{{ importShow }}">
+    <div onClick="{{ onImportCancel }}" style="position:fixed;inset:0;background:rgba(18,28,45,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px">
+      <div onClick="{{ stop }}" style="background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(15,25,45,.3);width:100%;max-width:560px;overflow:hidden;animation:pop .2s ease">
+        <div style="padding:20px 22px 14px;border-bottom:1px solid #eef1f6"><div style="font-size:16px;font-weight:700">{{ importTitle }}</div><div style="font-size:12.5px;color:#9099a6;margin-top:4px">粘贴 {{ importKind }} 定义，解析后将新增一个工具（API）</div></div>
+        <div style="padding:16px 22px">
+          <textarea value="{{ importText }}" onInput="{{ onImportText }}" placeholder="{{ importPlaceholder }}" spellcheck="false" style="width:100%;border:1px solid #e6eaf0;border-radius:9px;padding:12px;font-size:12.5px;color:#1c2733;outline:none;background:#f9fafc;resize:vertical;min-height:180px;line-height:1.6;font-family:'SF Mono',Consolas,Menlo,monospace"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;padding:0 22px 20px;justify-content:flex-end">
+          <button onClick="{{ onImportCancel }}" style="border-radius:9px;padding:9px 22px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #e6eaf0;background:#fff;color:#5b6573" style-hover="border-color:#cdd9ec">取消</button>
+          <button onClick="{{ onImportConfirm }}" style="border-radius:9px;padding:9px 22px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid #2563c9;background:#2563c9;color:#fff" style-hover="background:#1c4ea3">解析并添加</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== 查看示例 ===================== -->
+  <sc-if value="{{ sampleShow }}">
+    <div onClick="{{ onSampleClose }}" style="position:fixed;inset:0;background:rgba(18,28,45,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px">
+      <div onClick="{{ stop }}" style="background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(15,25,45,.3);width:100%;max-width:560px;overflow:hidden;animation:pop .2s ease">
+        <div style="padding:20px 22px 14px;border-bottom:1px solid #eef1f6;display:flex;align-items:center"><div style="font-size:16px;font-weight:700">{{ sampleTitle }} · 返回示例</div><span style="flex:1"></span><span onClick="{{ onSampleClose }}" style="color:#9099a6;cursor:pointer" style-hover="color:#1c2733"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M18 6L6 18M6 6l12 12"/></svg></span></div>
+        <div style="padding:16px 22px 22px"><pre style="margin:0;background:#0f1b2d;color:#cfe0ff;border-radius:10px;padding:16px;font-size:12.5px;line-height:1.7;overflow:auto;max-height:340px;font-family:'SF Mono',Consolas,Menlo,monospace">{{ sampleText }}</pre></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================== toast ===================== -->
+  <sc-if value="{{ toastShow }}">
+    <div style="position:fixed;left:50%;bottom:34px;transform:translateX(-50%);background:#16233b;color:#fff;font-size:13px;font-weight:500;padding:11px 20px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:400;display:flex;align-items:center;gap:9px;max-width:480px;animation:toastin .25s ease">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:16px;height:16px;flex:0 0 auto;color:{{ toastIconColor }}"><path d="{{ toastIconPath }}"/></svg><span>{{ toastMsg }}</span>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const uid = (p) => p + '_' + Math.random().toString(36).slice(2, 9);
+function fmtNow(){ const d=new Date(); const p=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
+
+const ICONS = ['🧰','🔧','🛠️','⚙️','🌐','🔌','📚','🗺️','📝','💬','🗄️','🔍','📁','🤖','📊','🧩','🛰️','📡','🧠','🔗','📦','☁️','🔐','💹','🌦️','📮','📞','🎯','🧮','📈','💱','⏱️'];
+
+function P(name, desc, type, required, def, enabled){
+  return { name:name||'', desc:desc||'', type:type||'string', required:!!required, def:def==null?'':String(def), enabled:enabled!==false };
+}
+function O(name, desc, type){ return { name:name||'', desc:desc||'', type:type||'string' }; }
+function A(o){
+  return Object.assign({ id:uid('api'), name:'', url:'', method:'GET', callMode:'sync', desc:'',
+    header:[], query:[], body:[], outputs:[], _status:'idle' }, o);
+}
+function T(o){
+  return Object.assign({ id:uid('tool'), icon:'🧰', authType:'none',
+    apikey:{ location:'header', paramName:'', paramValue:'' },
+    oauth:{ clientId:'', clientSecret:'', authUrl:'', scope:'', tokenUrl:'' },
+    apis:[], owner:'张明', createdAt:'2026-06-20 09:14', updatedAt:'2026-06-25 10:32' }, o);
+}
+
+const SEED = [
+  T({ name:'中文一言', icon:'📮', authType:'none',
+    desc:'调用 hitokoto 一言接口，随机返回一条中文句子、来源、作者与句子 ID，适合为对话增添趣味性开场白。',
+    createdAt:'2026-06-24 10:12', updatedAt:'2026-06-26 15:40',
+    apis:[ A({ name:'获取一言', url:'https://v1.hitokoto.cn/?encode=json', method:'GET', callMode:'sync', desc:'获取一条随机中文句子', _status:'ok',
+      query:[ P('encode','编码格式','string',true,'json',true) ],
+      outputs:[ O('hitokoto','一句话内容','string'), O('from','来源','string'), O('from_who','作者','string'), O('id','句子ID','int') ] }) ] }),
+
+  T({ name:'天气查询', icon:'🌦️', authType:'apikey',
+    apikey:{ location:'query', paramName:'key', paramValue:'wk_9f2c••••' },
+    desc:'基于城市名称查询实时天气，返回温度、湿度、风力与天气现象，为出行/生活类 Agent 提供气象能力。',
+    createdAt:'2026-06-22 09:30', updatedAt:'2026-06-25 11:20',
+    apis:[ A({ name:'实时天气', url:'https://api.weather.example.com/now', method:'GET', callMode:'sync', desc:'查询指定城市的实时天气', _status:'ok',
+      query:[ P('city','城市名称','string',true,'',true), P('lang','返回语言','string',false,'zh',true) ],
+      outputs:[ O('temp','温度(℃)','float'), O('humidity','湿度(%)','int'), O('text','天气现象','string'), O('wind','风力等级','string') ] }) ] }),
+
+  T({ name:'汇率换算', icon:'💱', authType:'none',
+    desc:'实时汇率换算工具，支持任意两种法定货币之间的金额换算，返回换算结果与当前汇率。',
+    createdAt:'2026-06-20 14:05', updatedAt:'2026-06-24 09:10',
+    apis:[ A({ name:'货币换算', url:'https://api.fx.example.com/convert', method:'GET', callMode:'sync', desc:'两种货币之间的金额换算', _status:'ok',
+      query:[ P('from','源货币代码','string',true,'USD',true), P('to','目标货币代码','string',true,'CNY',true), P('amount','换算金额','float',true,'1',true) ],
+      outputs:[ O('result','换算结果','float'), O('rate','当前汇率','float') ] }) ] }),
+
+  T({ name:'短信发送', icon:'📞', authType:'apikey',
+    apikey:{ location:'header', paramName:'Authorization', paramValue:'Bearer sms_••••' },
+    desc:'对接企业短信网关，向指定手机号发送模板短信，可用于验证码、通知与营销触达场景。',
+    createdAt:'2026-06-18 16:22', updatedAt:'2026-06-23 10:48',
+    apis:[ A({ name:'发送短信', url:'https://api.sms.example.com/v2/send', method:'POST', callMode:'sync', desc:'向指定手机号发送模板短信', _status:'ok',
+      header:[ P('Content-Type','内容类型','string',true,'application/json',true) ],
+      body:[ P('mobile','接收手机号','string',true,'',true), P('templateId','短信模板 ID','string',true,'',true), P('params','模板变量(JSON)','object',false,'',true) ],
+      outputs:[ O('messageId','消息 ID','string'), O('status','发送状态','string') ] }) ] }),
+
+  T({ name:'地图地理编码', icon:'🗺️', authType:'oauth2',
+    oauth:{ clientId:'map_client_01', clientSecret:'••••••', authUrl:'https://oauth.map.example.com/authorize', scope:'geo,place', tokenUrl:'https://oauth.map.example.com/token' },
+    desc:'地图开放平台地理服务，提供结构化地址与经纬度之间的正/逆地理编码能力。',
+    createdAt:'2026-06-15 11:00', updatedAt:'2026-06-21 17:35',
+    apis:[
+      A({ name:'地理编码', url:'https://api.map.example.com/geo', method:'GET', callMode:'sync', desc:'地址转经纬度坐标', _status:'ok',
+        query:[ P('address','结构化地址','string',true,'',true), P('city','限定城市','string',false,'',true) ],
+        outputs:[ O('lng','经度','float'), O('lat','纬度','float'), O('level','匹配级别','string') ] }),
+      A({ name:'逆地理编码', url:'https://api.map.example.com/regeo', method:'GET', callMode:'sync', desc:'经纬度转详细地址', _status:'ok',
+        query:[ P('location','经纬度坐标','string',true,'',true) ],
+        outputs:[ O('address','格式化地址','string'), O('province','省份','string'), O('city','城市','string') ] }) ] }),
+
+  T({ name:'股票行情', icon:'💹', authType:'apikey',
+    apikey:{ location:'query', paramName:'token', paramValue:'stk_••••' },
+    desc:'查询 A 股 / 港股实时行情，返回最新价、涨跌幅与成交量，为金融资讯类 Agent 提供数据支撑。',
+    createdAt:'2026-06-12 09:18', updatedAt:'2026-06-19 14:02',
+    apis:[ A({ name:'实时报价', url:'https://api.stock.example.com/quote', method:'GET', callMode:'sync', desc:'查询单只股票实时报价', _status:'idle',
+      query:[ P('symbol','股票代码','string',true,'',true) ],
+      outputs:[ O('price','最新价','float'), O('change','涨跌幅(%)','float'), O('volume','成交量','int') ] }) ] })
+];
+
+const AUTH_LABEL = { none:'不授权', apikey:'APIkey', oauth2:'Oauth 2.0' };
+const PAGE_SIZE = 6;
+
+function authMeta(t){
+  if(t==='apikey') return { label:'APIkey', bg:'#e9f6f0', color:'#2e9d6e', bd:'#c7e8d8' };
+  if(t==='oauth2') return { label:'OAuth 2.0', bg:'#f1ecfa', color:'#7a52c4', bd:'#ddd0f2' };
+  return { label:'不授权', bg:'#f0f2f6', color:'#5b6573', bd:'#e6eaf0' };
+}
+
+class Component extends DCLogic {
+  state = {
+    view:'list', search:'', page:1,
+    editingId:null, step:1, activeApi:0, iconOpen:false,
+    detailId:null, detailTab:'overview', detailApi:0,
+    createChoice:false, del:null, importKind:null, importText:'', sample:null, toast:null,
+    tools: SEED, draft:null
+  };
+
+  u = () => this.forceUpdate();
+  find = (id) => this.state.tools.find(t => t.id === id);
+
+  showToast(msg, kind){
+    this.setState({ toast:{ msg, kind:kind||'ok' } });
+    clearTimeout(this._tt);
+    this._tt = setTimeout(() => this.setState({ toast:null }), 2400);
+  }
+
+  /* ---------- 工厂 ---------- */
+  newApi(name){ return A({ name:name||'新工具' }); }
+  newDraft(){ return { name:'', desc:'', icon:'🧰', authType:'none',
+    apikey:{ location:'header', paramName:'', paramValue:'' },
+    oauth:{ clientId:'', clientSecret:'', authUrl:'', scope:'', tokenUrl:'' },
+    apis:[ this.newApi('工具1') ] }; }
+  toDraft(t){ return JSON.parse(JSON.stringify({ name:t.name, desc:t.desc, icon:t.icon, authType:t.authType,
+    apikey:t.apikey, oauth:t.oauth, apis:t.apis })); }
+
+  /* ---------- 导航 ---------- */
+  openNew = () => this.setState({ createChoice:true });
+  closeCreateChoice = () => this.setState({ createChoice:false });
+  openManualCreate = () => this.setState({ createChoice:false, view:'wizard', editingId:null, step:1, activeApi:0, iconOpen:false, draft:this.newDraft() });
+  openEdit = () => { const id=this.state.detailId; const t=this.find(id);
+    this.setState({ view:'wizard', editingId:id, step:1, activeApi:0, iconOpen:false, draft:this.toDraft(t) }); };
+  openDetail(id){ this.setState({ view:'detail', detailId:id, detailTab:'overview', detailApi:0 }); }
+  back = () => this.setState({ view:'list', iconOpen:false });
+  stop = (e) => e.stopPropagation();
+
+  /* ---------- 步骤 ---------- */
+  validateStep1(){
+    const d=this.state.draft;
+    if(!d.name.trim()){ this.showToast('请填写工具名称','warn'); return false; }
+    if(!d.desc.trim()){ this.showToast('请填写工具描述','warn'); return false; }
+    if(d.authType==='apikey' && (!d.apikey.paramName.trim() || !d.apikey.paramValue.trim())){ this.showToast('请完善 APIkey 密钥参数名与密钥值','warn'); return false; }
+    if(d.authType==='oauth2' && (!d.oauth.clientId.trim() || !d.oauth.clientSecret.trim() || !d.oauth.authUrl.trim() || !d.oauth.tokenUrl.trim())){ this.showToast('请完善 OAuth 2.0 必填项','warn'); return false; }
+    return true;
+  }
+  validateStep2(){
+    const apis=this.state.draft.apis;
+    if(!apis.length){ this.showToast('请至少添加一个工具(API)','warn'); return false; }
+    for(let i=0;i<apis.length;i++){
+      const a=apis[i], label='第 '+(i+1)+' 个 API';
+      if(!a.name.trim()){ this.setState({ activeApi:i }); this.showToast(label+'：请填写 API 工具名称','warn'); return false; }
+      if(!a.url.trim()){ this.setState({ activeApi:i }); this.showToast(label+'：请填写调用地址','warn'); return false; }
+      if(!a.desc.trim()){ this.setState({ activeApi:i }); this.showToast(label+'：请填写工具描述','warn'); return false; }
+    }
+    return true;
+  }
+  next = () => {
+    const s=this.state.step;
+    if(s===1){ if(!this.validateStep1()) return; }
+    if(s===2){ if(!this.validateStep2()) return; }
+    this.setState({ step:s+1, iconOpen:false });
+    this.scrollTop();
+  };
+  prev = () => { this.setState({ step:this.state.step-1, iconOpen:false }); this.scrollTop(); };
+  gotoStep(n){
+    const s=this.state.step;
+    if(n>s){
+      if(s<=1 && n>=2 && !this.validateStep1()) return;
+      if(s<=2 && n>=3 && !this.validateStep2()) return;
+    }
+    this.setState({ step:n, iconOpen:false }); this.scrollTop();
+  }
+  scrollTop(){ /* container scroll reset handled by React remount of step */ }
+
+  /* ---------- 步骤1 字段 ---------- */
+  onName = (e) => { this.state.draft.name = e.target.value; this.u(); };
+  onDesc = (e) => { this.state.draft.desc = e.target.value; this.u(); };
+  onIconToggle = (e) => { e.stopPropagation(); this.setState({ iconOpen:!this.state.iconOpen }); };
+  onAuth = (e) => { this.state.draft.authType = e.target.value; this.u(); };
+  onAkHeader = () => { this.state.draft.apikey.location='header'; this.u(); };
+  onAkQuery = () => { this.state.draft.apikey.location='query'; this.u(); };
+  onAkName = (e) => { this.state.draft.apikey.paramName = e.target.value; this.u(); };
+  onAkVal = (e) => { this.state.draft.apikey.paramValue = e.target.value; this.u(); };
+  onOCid = (e) => { this.state.draft.oauth.clientId = e.target.value; this.u(); };
+  onOSec = (e) => { this.state.draft.oauth.clientSecret = e.target.value; this.u(); };
+  onOAuthUrl = (e) => { this.state.draft.oauth.authUrl = e.target.value; this.u(); };
+  onOScope = (e) => { this.state.draft.oauth.scope = e.target.value; this.u(); };
+  onOTokenUrl = (e) => { this.state.draft.oauth.tokenUrl = e.target.value; this.u(); };
+
+  /* ---------- 步骤2 API ---------- */
+  curApi(){ const d=this.state.draft; let i=this.state.activeApi; if(i>=d.apis.length) i=0; return d.apis[i]; }
+  onAddApi = () => { const d=this.state.draft; d.apis.push(this.newApi('工具'+(d.apis.length+1))); this.setState({ activeApi:d.apis.length-1 }); };
+  selectApi(i){ this.setState({ activeApi:i }); }
+  delApi(i){ const d=this.state.draft; if(d.apis.length<=1){ this.showToast('至少保留一个工具(API)','warn'); return; }
+    d.apis.splice(i,1); let a=this.state.activeApi; if(a>=d.apis.length) a=d.apis.length-1; this.setState({ activeApi:a }); }
+  onAName = (e) => { this.curApi().name = e.target.value; this.u(); };
+  onAUrl = (e) => { this.curApi().url = e.target.value; this.u(); };
+  onADesc = (e) => { this.curApi().desc = e.target.value; this.u(); };
+  onMGet = () => { this.curApi().method='GET'; this.u(); };
+  onMPost = () => { this.curApi().method='POST'; this.u(); };
+  onCStream = () => { this.curApi().callMode='stream'; this.u(); };
+  onCSync = () => { this.curApi().callMode='sync'; this.u(); };
+  addParam(group){ this.curApi()[group].push(P()); this.u(); };
+  onAddHeader = () => this.addParam('header');
+  onAddQuery = () => this.addParam('query');
+  onAddBody = () => { if(this.curApi().method==='GET'){ this.showToast('GET 请求不支持 body 参数','warn'); return; } this.addParam('body'); };
+  onAddOutput = () => { this.curApi().outputs.push(O()); this.u(); };
+
+  /* ---------- 步骤3 校验 ---------- */
+  validateApi(i){
+    const a=this.state.draft.apis[i];
+    if(a._status==='validating') return;
+    if(!a.url.trim()){ a._status='fail'; this.u(); this.showToast('调用地址为空，校验失败','warn'); return; }
+    a._status='validating'; this.u();
+    setTimeout(() => {
+      a._status = /fail|invalid|error/i.test(a.url) ? 'fail' : 'ok';
+      this.u();
+      this.showToast(a._status==='ok' ? ('「'+(a.name||'工具')+'」校验通过') : ('「'+(a.name||'工具')+'」校验失败'), a._status==='ok'?'ok':'warn');
+    }, 1100);
+  }
+  showSampleFor(i){
+    const a=this.state.draft ? this.state.draft.apis[i] : null;
+    if(!a) return;
+    const obj={};
+    (a.outputs.length?a.outputs:[O('result','结果','string')]).forEach(o=>{
+      obj[o.name||'field'] = o.type==='int'?0 : o.type==='float'?0.0 : o.type==='boolean'?true : o.type==='array'?[] : o.type==='object'?{}:'示例值';
+    });
+    this.setState({ sample:{ title:a.name||'工具', text:JSON.stringify({ code:0, message:'success', data:obj }, null, 2) } });
+  }
+
+  /* ---------- 保存 ---------- */
+  onSave = () => {
+    const d=this.state.draft;
+    if(!this.validateStep1()){ this.setState({ step:1 }); return; }
+    if(!this.validateStep2()){ this.setState({ step:2 }); return; }
+    const editing = this.state.editingId ? this.find(this.state.editingId) : null;
+    const tool = T({
+      id: this.state.editingId || uid('tool'),
+      name:d.name.trim(), desc:d.desc.trim(), icon:d.icon, authType:d.authType,
+      apikey:JSON.parse(JSON.stringify(d.apikey)), oauth:JSON.parse(JSON.stringify(d.oauth)),
+      apis:JSON.parse(JSON.stringify(d.apis)),
+      owner: editing?editing.owner:'张明',
+      createdAt: editing?editing.createdAt:fmtNow(), updatedAt:fmtNow()
+    });
+    if(editing){
+      const idx=this.state.tools.findIndex(t=>t.id===editing.id);
+      this.state.tools[idx]=tool;
+      this.setState({ view:'detail', detailId:tool.id, detailTab:'overview', detailApi:0, draft:null, editingId:null });
+      this.showToast('工具已更新：'+tool.name, 'ok');
+    }else{
+      this.state.tools.unshift(tool);
+      this.setState({ view:'detail', detailId:tool.id, detailTab:'overview', detailApi:0, draft:null, search:'', page:1 });
+      this.showToast('工具已创建：'+tool.name+'，含 '+tool.apis.length+' 个 API', 'ok');
+    }
+  };
+
+  /* ---------- 详情 ---------- */
+  onTabOverview = () => this.setState({ detailTab:'overview' });
+  onTabApis = () => this.setState({ detailTab:'apis', detailApi:0 });
+  onAskDelete = () => { const t=this.find(this.state.detailId); this.setState({ del:{ id:t.id, name:t.name, count:t.apis.length } }); };
+  onDelCancel = () => this.setState({ del:null });
+  onDelConfirm = () => { const id=this.state.del.id; const name=this.state.del.name;
+    this.setState({ tools:this.state.tools.filter(t=>t.id!==id), del:null, view:'list' });
+    this.showToast('已删除工具：'+name, 'ok'); };
+
+  /* ---------- 导入 / 示例 ---------- */
+  onYaml = () => this.setState({ importKind:'yaml', importText:'' });
+  onJson = () => this.setState({ importKind:'json', importText:'' });
+  onImportText = (e) => this.setState({ importText:e.target.value });
+  onImportCancel = () => this.setState({ importKind:null, importText:'' });
+  onImportConfirm = () => {
+    const txt=this.state.importText.trim(); const d=this.state.draft; const kind=this.state.importKind;
+    if(!txt){ this.showToast('请先粘贴要导入的内容','warn'); return; }
+    let name='导入工具'+(d.apis.length+1), url='', desc='';
+    if(kind==='json'){
+      try{ const o=JSON.parse(txt); name=o.name||name; url=o.url||o.path||''; desc=o.description||o.desc||''; }
+      catch(e){ this.showToast('JSON 解析失败，请检查格式','warn'); return; }
+    }else{
+      const m=/name\s*:\s*(.+)/i.exec(txt); if(m) name=m[1].trim();
+      const mu=/url\s*:\s*(.+)/i.exec(txt); if(mu) url=mu[1].trim();
+    }
+    const imported=this.newApi(name); imported.url=url; imported.desc=desc;
+    const first=d.apis[0];
+    const replacePlaceholder=d.apis.length===1 && first && first.name==='工具1' && !first.url.trim() && !first.desc.trim()
+      && first.header.length===0 && first.query.length===0 && first.body.length===0 && first.outputs.length===0;
+    let activeApi;
+    if(replacePlaceholder){ d.apis[0]=imported; activeApi=0; }
+    else { d.apis.push(imported); activeApi=d.apis.length-1; }
+    this.setState({ importKind:null, importText:'', activeApi });
+    this.showToast('已从 '+(kind==='json'?'JSON':'YAML')+' 添加工具：'+name, 'ok');
+  };
+  onSampleClose = () => this.setState({ sample:null });
+  onDoc = () => this.showToast('使用文档暂未开放','info');
+
+  /* ---------- 列表 ---------- */
+  onSearch = (e) => this.setState({ search:e.target.value, page:1 });
+  onClearSearch = () => this.setState({ search:'', page:1 });
+
+  /* ==================================================== */
+  renderVals(){
+    const s=this.state, d=s.draft, V={};
+    V.isList = s.view==='list'; V.isWizard = s.view==='wizard'; V.isDetail = s.view==='detail';
+    V.stop = this.stop; V.onBack = this.back; V.onNew = this.openNew; V.onDoc = this.onDoc;
+    V.onSearch = this.onSearch; V.onClearSearch = this.onClearSearch;
+    V.onEdit = this.openEdit; V.onAskDelete = this.onAskDelete;
+    V.createChoiceShow = s.createChoice; V.onCreateChoiceCancel = this.closeCreateChoice; V.onManualCreate = this.openManualCreate;
+
+    if(V.isList){ V.crumbTitle='Tool 工具'; V.crumbSub='能力与工具中心 · 自定义 API 工具'; V.showSub=true; V.showBack=false; }
+    else if(V.isWizard){ V.crumbTitle=s.editingId?'编辑工具':'新建工具'; V.showSub=false; V.showBack=true; }
+    else { V.crumbTitle='工具详情'; V.showSub=false; V.showBack=true; }
+
+    /* ----- toast ----- */
+    V.toastShow = !!s.toast;
+    if(s.toast){
+      V.toastMsg = s.toast.msg;
+      V.toastIconColor = s.toast.kind==='warn' ? '#f0cf8a' : s.toast.kind==='info' ? '#8fb6f0' : '#7fe0b4';
+      V.toastIconPath = s.toast.kind==='ok' ? 'M20 6L9 17l-5-5' : 'M12 8v4M12 16h.01';
+    }
+
+    /* ----- 列表 ----- */
+    const q=s.search.trim().toLowerCase();
+    let list=s.tools.slice(); if(q) list=list.filter(t=>t.name.toLowerCase().includes(q));
+    const totalPages=Math.max(1, Math.ceil(list.length/PAGE_SIZE));
+    let page=s.page; if(page>totalPages) page=totalPages;
+    const start=(page-1)*PAGE_SIZE;
+    V.searchVal=s.search; V.searchHas=s.search.length>0;
+    V.tbHint = q ? ('共匹配 '+list.length+' 个') : ('共 '+s.tools.length+' 个工具');
+    V.listEmpty = list.length===0;
+    V.emptyTitle = q?'未找到匹配的工具':'暂无工具';
+    V.emptySub = q?'试试更换关键词，或点击右上角「新建工具」':'点击右上角「新建工具」开始接入';
+    V.cards = list.slice(start, start+PAGE_SIZE).map(t=>{
+      const m=authMeta(t.authType);
+      return { icon:t.icon, name:t.name, desc:t.desc, badgeLabel:m.label, badgeBg:m.bg, badgeColor:m.color, badgeBd:m.bd,
+        firstUrl: t.apis[0]?t.apis[0].url:'—', apiCount:t.apis.length, updatedAt:t.updatedAt,
+        onOpen:()=>this.openDetail(t.id) };
+    });
+    V.pagerShow = list.length>PAGE_SIZE;
+    if(V.pagerShow){
+      const pages=[]; for(let i=1;i<=totalPages;i++){ if(i===1||i===totalPages||Math.abs(i-page)<=1) pages.push(i); else if(pages[pages.length-1]!=='...') pages.push('...'); }
+      const mk=(label,active,disabled,cursor,go)=>({ label, active, onClick: disabled?(()=>{}):go,
+        bg: active?'#2563c9':'#fff', color: active?'#fff':'#5b6573', border: active?'1px solid #2563c9':'1px solid #e6eaf0',
+        cursor: disabled?'default':'pointer', opacity: disabled?'.4':'1' });
+      const arr=[];
+      arr.push(mk('‹', false, page===1, 'pointer', ()=>this.setState({page:page-1})));
+      pages.forEach(p=>{ if(p==='...') arr.push({ label:'…', bg:'transparent', color:'#9099a6', border:'none', cursor:'default', opacity:'1', onClick:()=>{} });
+        else arr.push(mk(String(p), p===page, false, 'pointer', ()=>this.setState({page:p}))); });
+      arr.push(mk('›', false, page===totalPages, 'pointer', ()=>this.setState({page:page+1})));
+      V.pagerPages=arr; V.pagerInfo='第 '+page+' / '+totalPages+' 页';
+    }
+
+    /* ----- 向导 ----- */
+    if(V.isWizard && d){
+      const labels=['填写基本信息','添加工具(API)','校验工具(API)'];
+      V.steps=[1,2,3].map((n,i)=>{
+        const active=s.step===n, done=s.step>n;
+        let clip;
+        if(i===0) clip='polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%)';
+        else if(i===2) clip='polygon(0 0, 100% 0, 100% 100%, 0 100%, 18px 50%)';
+        else clip='polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%)';
+        return { n, label:labels[i], clip, ml: i===0?'0':'-9px',
+          bg: active?'#2563c9':(done?'#eef3fb':'#fff'),
+          color: active?'#fff':(done?'#1c4ea3':'#9099a6'),
+          border: active?'none':'1px solid #e6eaf0',
+          badgeBg: active?'rgba(255,255,255,.25)':(done?'#2563c9':'#e6eaf0'),
+          badgeColor: active?'#fff':(done?'#fff':'#9099a6'),
+          onClick:()=>this.gotoStep(n) };
+      });
+      V.isStep1=s.step===1; V.isStep2=s.step===2; V.isStep3=s.step===3;
+      V.showPrev=s.step>1; V.showNext=s.step<3; V.showSave=s.step===3;
+      V.onPrev=this.prev; V.onNext=this.next; V.onSave=this.onSave;
+
+      /* step1 */
+      V.b_name=d.name; V.nameLen=d.name.length; V.b_desc=d.desc; V.descLen=d.desc.length;
+      V.b_icon=d.icon; V.iconOpen=s.iconOpen; V.b_authType=d.authType;
+      V.icons=ICONS.map(ic=>({ ic, bg: ic===d.icon?'#eef3fb':'transparent', ring: ic===d.icon?'inset 0 0 0 1.5px #2563c9':'none',
+        onPick:(e)=>{ e.stopPropagation(); d.icon=ic; this.setState({ iconOpen:false }); } }));
+      V.isNone=d.authType==='none'; V.isApikey=d.authType==='apikey'; V.isOauth=d.authType==='oauth2';
+      const akH=d.apikey.location==='header';
+      V.akHeaderBd=akH?'#2563c9':'#cfd6e0'; V.akHeaderDot=akH?'#2563c9':'transparent';
+      V.akQueryBd=!akH?'#2563c9':'#cfd6e0'; V.akQueryDot=!akH?'#2563c9':'transparent';
+      V.ak_name=d.apikey.paramName; V.akNameLen=d.apikey.paramName.length;
+      V.ak_val=d.apikey.paramValue; V.akValLen=d.apikey.paramValue.length;
+      V.onAkHeader=this.onAkHeader; V.onAkQuery=this.onAkQuery; V.onAkName=this.onAkName; V.onAkVal=this.onAkVal;
+      V.o_cid=d.oauth.clientId; V.oCidLen=d.oauth.clientId.length;
+      V.o_sec=d.oauth.clientSecret; V.oSecLen=d.oauth.clientSecret.length;
+      V.o_authUrl=d.oauth.authUrl; V.oAuthLen=d.oauth.authUrl.length;
+      V.o_scope=d.oauth.scope; V.o_tokenUrl=d.oauth.tokenUrl; V.oTokLen=d.oauth.tokenUrl.length;
+      V.onName=this.onName; V.onDesc=this.onDesc; V.onIconToggle=this.onIconToggle; V.onAuth=this.onAuth;
+      V.onOCid=this.onOCid; V.onOSec=this.onOSec; V.onOAuthUrl=this.onOAuthUrl; V.onOScope=this.onOScope; V.onOTokenUrl=this.onOTokenUrl;
+
+      /* step2 */
+      let ai=s.activeApi; if(ai>=d.apis.length) ai=0;
+      const api=d.apis[ai];
+      V.apiTabs=d.apis.map((a,i)=>({ name:a.name||('工具'+(i+1)), showDel:d.apis.length>1,
+        color:i===ai?'#2563c9':'#5b6573', bd:i===ai?'#2563c9':'transparent',
+        onClick:()=>this.selectApi(i), onDel:(e)=>{ e.stopPropagation(); this.delApi(i); } }));
+      V.onAddApi=this.onAddApi; V.onYaml=this.onYaml; V.onJson=this.onJson;
+      V.a_name=api.name; V.aNameLen=api.name.length; V.a_url=api.url; V.a_desc=api.desc; V.aDescLen=api.desc.length;
+      V.onAName=this.onAName; V.onAUrl=this.onAUrl; V.onADesc=this.onADesc;
+      const isGet=api.method==='GET';
+      V.mGetBd=isGet?'#2563c9':'#cfd6e0'; V.mGetDot=isGet?'#2563c9':'transparent';
+      V.mPostBd=!isGet?'#2563c9':'#cfd6e0'; V.mPostDot=!isGet?'#2563c9':'transparent';
+      const isStream=api.callMode==='stream';
+      V.cStreamBd=isStream?'#2563c9':'#cfd6e0'; V.cStreamDot=isStream?'#2563c9':'transparent';
+      V.cSyncBd=!isStream?'#2563c9':'#cfd6e0'; V.cSyncDot=!isStream?'#2563c9':'transparent';
+      V.onMGet=this.onMGet; V.onMPost=this.onMPost; V.onCStream=this.onCStream; V.onCSync=this.onCSync;
+
+      const mapParam=(arr, group)=>arr.map((p,i)=>({
+        name:p.name, desc:p.desc, type:p.type, required:p.required, def:p.def,
+        enabledBg:p.enabled?'#2563c9':'#cfd6e0', knobLeft:p.enabled?'17px':'2px',
+        onName:(e)=>{ p.name=e.target.value; this.u(); },
+        onDesc:(e)=>{ p.desc=e.target.value; this.u(); },
+        onType:(e)=>{ p.type=e.target.value; this.u(); },
+        onReq:(e)=>{ p.required=e.target.checked; this.u(); },
+        onDef:(e)=>{ p.def=e.target.value; this.u(); },
+        onToggle:()=>{ p.enabled=!p.enabled; this.u(); },
+        onDel:()=>{ api[group].splice(i,1); this.u(); }
+      }));
+      V.headerParams=mapParam(api.header,'header'); V.headerEmpty=api.header.length===0;
+      V.queryParams=mapParam(api.query,'query'); V.queryEmpty=api.query.length===0;
+      V.bodyDisabled=isGet;
+      V.bodyParams=isGet?[]:mapParam(api.body,'body'); V.bodyEmpty=!isGet && api.body.length===0;
+      V.bodyAddColor=isGet?'#c2cad8':'#2563c9'; V.bodyAddCursor=isGet?'not-allowed':'pointer';
+      V.onAddHeader=this.onAddHeader; V.onAddQuery=this.onAddQuery; V.onAddBody=this.onAddBody;
+      V.outputRows=api.outputs.map((o,i)=>({ name:o.name, desc:o.desc, type:o.type,
+        onName:(e)=>{ o.name=e.target.value; this.u(); },
+        onDesc:(e)=>{ o.desc=e.target.value; this.u(); },
+        onType:(e)=>{ o.type=e.target.value; this.u(); },
+        onDel:()=>{ api.outputs.splice(i,1); this.u(); } }));
+      V.outputEmpty=api.outputs.length===0; V.onAddOutput=this.onAddOutput;
+
+      /* step3 */
+      V.vList=d.apis.map((a,i)=>{
+        const st=a._status;
+        const meta = st==='ok' ? {l:'已校验',c:'#2e9d6e',bg:'#e9f6f0',bd:'#c7e8d8'}
+          : st==='fail' ? {l:'校验失败',c:'#d0584f',bg:'#fbeceb',bd:'#f3cdc9'}
+          : st==='validating' ? {l:'校验中',c:'#c8842a',bg:'#fbf2e6',bd:'#f0dcae'}
+          : {l:'待校验',c:'#8b95a3',bg:'#f0f2f6',bd:'#e6eaf0'};
+        return { name:a.name||('工具'+(i+1)), desc:a.desc||'（暂无描述）', hasUrl:!!a.url.trim(), method:a.method, url:a.url,
+          statusLabel:meta.l, statusColor:meta.c, statusBg:meta.bg, statusBd:meta.bd,
+          validating: st==='validating',
+          validateLabel: st==='validating'?'校验中':'去校验',
+          validateColor: st==='validating'?'#c8842a':'#2563c9',
+          onValidate:()=>this.validateApi(i), onSample:()=>this.showSampleFor(i) };
+      });
+    }
+
+    /* ----- 详情 ----- */
+    if(V.isDetail){
+      const t=this.find(s.detailId);
+      if(t){
+        const m=authMeta(t.authType);
+        V.d_icon=t.icon; V.d_name=t.name; V.d_badgeLabel=m.label; V.d_badgeBg=m.bg; V.d_badgeColor=m.color; V.d_badgeBd=m.bd;
+        V.d_owner=t.owner; V.d_created=t.createdAt; V.d_updated=t.updatedAt; V.d_apiCount=t.apis.length; V.d_desc=t.desc;
+        V.detailTab=s.detailTab; V.isOverview=s.detailTab==='overview'; V.isApis=s.detailTab==='apis';
+        V.onTabOverview=this.onTabOverview; V.onTabApis=this.onTabApis;
+        V.ovBg=V.isOverview?'#fff':'transparent'; V.ovColor=V.isOverview?'#1c4ea3':'#5b6573'; V.ovShadow=V.isOverview?'0 1px 4px rgba(20,35,60,.08)':'none';
+        V.apBg=V.isApis?'#fff':'transparent'; V.apColor=V.isApis?'#1c4ea3':'#5b6573'; V.apShadow=V.isApis?'0 1px 4px rgba(20,35,60,.08)':'none';
+
+        V.d_authLabel=AUTH_LABEL[t.authType];
+        const cells=[];
+        const mask=(v)=> v ? (v.length>6 ? v.slice(0,3)+'••••' : '••••') : '—';
+        if(t.authType==='apikey'){
+          cells.push({ label:'密钥位置', value: t.apikey.location==='header'?'Header':'Query', font:'inherit', span:'auto' });
+          cells.push({ label:'密钥参数名', value: t.apikey.paramName||'—', font:"'SF Mono',Consolas,Menlo,monospace", span:'auto' });
+          cells.push({ label:'密钥值', value: mask(t.apikey.paramValue), font:"'SF Mono',Consolas,Menlo,monospace", span:'1 / -1' });
+        }else if(t.authType==='oauth2'){
+          cells.push({ label:'ClientId', value:t.oauth.clientId||'—', font:"'SF Mono',Consolas,Menlo,monospace", span:'auto' });
+          cells.push({ label:'ClientSecret', value:mask(t.oauth.clientSecret), font:"'SF Mono',Consolas,Menlo,monospace", span:'auto' });
+          cells.push({ label:'AuthorizationUrl', value:t.oauth.authUrl||'—', font:"'SF Mono',Consolas,Menlo,monospace", span:'1 / -1' });
+          cells.push({ label:'TokenUrl', value:t.oauth.tokenUrl||'—', font:"'SF Mono',Consolas,Menlo,monospace", span:'1 / -1' });
+          if(t.oauth.scope) cells.push({ label:'Scope', value:t.oauth.scope, font:'inherit', span:'1 / -1' });
+        }
+        V.d_authCells=cells;
+
+        let di=s.detailApi; if(di>=t.apis.length) di=0;
+        V.d_apiTabs=t.apis.map((a,i)=>({ name:a.name||('工具'+(i+1)), color:i===di?'#1c4ea3':'#5b6573', bd:i===di?'#2563c9':'transparent',
+          dot:i===di?'#2e9d6e':'#cfd6e0', onClick:()=>this.setState({ detailApi:i }) }));
+        const a=t.apis[di];
+        if(a){
+          V.da_name=a.name; V.da_url=a.url; V.da_method=a.method; V.da_callMode=a.callMode==='stream'?'流式':'非流式'; V.da_desc=a.desc||'（暂无描述）';
+          const grp=(title,rows)=>({ title, empty:rows.length===0, rows:rows.map(r=>({ name:r.name, desc:r.desc||'—', type:r.type,
+            req: r.required?'是':'否', def:r.def||'—' })) });
+          const groups=[ grp('Header', a.header), grp('Query', a.query) ];
+          if(a.method!=='GET') groups.push(grp('Body', a.body));
+          V.da_groups=groups;
+          V.da_outputs=a.outputs.map(o=>({ name:o.name, desc:o.desc||'—', type:o.type }));
+          V.da_outEmpty=a.outputs.length===0;
+        }
+      }
+    }
+
+    /* ----- 弹窗 ----- */
+    V.delShow=!!s.del; if(s.del){ V.delName=s.del.name; V.delCount=s.del.count; }
+    V.onDelCancel=this.onDelCancel; V.onDelConfirm=this.onDelConfirm;
+    V.importShow=!!s.importKind;
+    if(s.importKind){ V.importKind=s.importKind; V.importTitle=s.importKind==='json'?'JSON 添加工具':'YAML 添加工具';
+      V.importText=s.importText;
+      V.importPlaceholder=s.importKind==='json'?'{\n  "name": "获取天气",\n  "url": "https://api.example.com/weather",\n  "description": "查询实时天气"\n}':'name: 获取天气\nurl: https://api.example.com/weather\nmethod: GET'; }
+    V.onImportText=this.onImportText; V.onImportCancel=this.onImportCancel; V.onImportConfirm=this.onImportConfirm;
+    V.sampleShow=!!s.sample; if(s.sample){ V.sampleTitle=s.sample.title; V.sampleText=s.sample.text; }
+    V.onSampleClose=this.onSampleClose;
+
+    return V;
+  }
+}
+</script>
+<script src="./prototype-routes.js"></script>
+<script src="./prototype-nav.js"></script>
+</body>
+</html>

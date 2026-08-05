@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EBC AI - Agent 开发中心</title>
+<style>
+
+  :root{
+    --navy:#16233b;--navy-2:#1d2f4d;
+    --primary:#2563c9;--primary-d:#1c4ea3;--primary-bg:#eef3fb;
+    --bg:#f3f5f9;--paper:#ffffff;
+    --ink:#1c2733;--sub:#5b6573;--mute:#9099a6;
+    --line:#e6eaf0;--line-2:#eef1f6;
+    --gold:#c98a1e;--gold-bg:#fdf6e8;--gold-bd:#f0dcae;--gold-strong:#e9c25f;
+    --green:#2e9d6e;--green-bg:#e9f6f0;--green-bd:#c7e8d8;
+    --amber:#c8842a;--amber-bg:#fbf2e6;--amber-bd:#f0dcae;
+    --purple:#7a52c4;--purple-bg:#f1ecfa;--purple-bd:#ddd0f2;
+    --red:#d0584f;--red-bg:#fbeceb;
+    --gray-bg:#f6f8fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  svg{width:20px;height:20px;display:block}
+  .app{display:flex;height:100vh;overflow:hidden}
+
+  /* ============ 侧边栏 ============ */
+  .sidebar{width:248px;flex:0 0 248px;background:#0d1a36;color:#c7cfdf;
+    display:flex;flex-direction:column;height:100vh}
+  .logo{display:flex;align-items:center;gap:11px;padding:18px 18px 16px}
+  .logo .mark{width:36px;height:36px;border-radius:9px;flex:0 0 auto;
+    background:linear-gradient(135deg,#f7c74f,#e89310);display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#3a2a05;font-size:12px;letter-spacing:.5px;box-shadow:0 3px 8px rgba(232,147,16,.35)}
+  .logo .tt{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px}
+  .logo .ss{font-size:10.5px;color:#6d7a97;margin-top:2px;letter-spacing:1px}
+
+  .nav{flex:1;overflow-y:auto;padding:4px 12px 14px}
+  .nav::-webkit-scrollbar{width:6px}
+  .nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+  .nav-cap{font-size:11px;color:#5c6a88;padding:13px 12px 7px;letter-spacing:1px}
+
+  .nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+    font-size:13.5px;color:#bcc7d8;cursor:pointer;margin-bottom:2px;transition:.15s}
+  .nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav-item.is-active{background:#20305a;color:#fff}
+  .nav-item .ico{opacity:.92;flex:0 0 auto}
+
+  .nav-group{margin-bottom:2px}
+  .ng-head{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+    font-size:13.5px;color:#bcc7d8;cursor:pointer;transition:.15s;user-select:none}
+  .ng-head:hover{background:rgba(255,255,255,.06);color:#fff}
+  .ng-head .ico{opacity:.92;flex:0 0 auto}
+  .ng-head .chev{margin-left:auto;transition:transform .2s;flex:0 0 auto}
+  .ng-head .chev svg{width:15px;height:15px}
+  .nav-group.open .ng-head{color:#fff}
+  .nav-group.open .ng-head .chev{transform:rotate(90deg)}
+  .ng-sub{max-height:0;overflow:hidden;transition:max-height .26s ease}
+  .nav-group.open .ng-sub{max-height:320px}
+  .ng-sub-item{display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;
+    font-size:13px;color:#9aa7bd;cursor:pointer;margin:2px 0;transition:.15s;position:relative}
+  .ng-sub-item:hover{background:rgba(255,255,255,.05);color:#fff}
+  .ng-sub-item.is-active{background:rgba(37,99,201,.18);color:#fff}
+  .ng-sub-item.is-active::before{content:"";position:absolute;left:24px;top:50%;transform:translateY(-50%);
+    width:5px;height:5px;border-radius:50%;background:var(--primary)}
+  .mvp{margin-left:auto;font-size:9px;font-weight:800;color:#3a2c07;
+    background:#f5b93c;border-radius:4px;padding:1px 5px;letter-spacing:.5px;flex:0 0 auto}
+
+  .side-foot{border-top:1px solid rgba(255,255,255,.08);padding:12px;display:flex;align-items:center;gap:10px}
+  .avatar{width:34px;height:34px;border-radius:50%;flex:0 0 auto;background:#2b5fd9;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+  .side-foot .nm{font-size:13px;color:#e7ecf4;font-weight:600}
+  .side-foot .rl{font-size:10.5px;color:#6d7a97;margin-top:1px}
+  .side-foot .who{flex:1;min-width:0}
+  .side-foot .gear{color:#7d8aa0;cursor:pointer}.side-foot .gear:hover{color:#fff}
+
+  /* ============ 主区域 ============ */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  .topbar{height:58px;flex:0 0 58px;background:var(--paper);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:14px;padding:0 22px}
+  .crumb{font-size:15px;font-weight:700}
+  .crumb span{font-size:12px;color:var(--mute);font-weight:400;margin-left:9px}
+  .top-acts{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .gbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);
+    border-radius:8px;padding:8px 13px;font-size:13px;color:var(--sub);cursor:pointer;font-weight:500}
+  .gbtn:hover{background:var(--gray-bg);color:var(--primary);border-color:var(--primary-bg)}
+  .gbtn svg{width:15px;height:15px}
+
+  /* ===== Tab 子页面导航 ===== */
+  .tabbar{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:0 22px;
+    display:flex;align-items:center;gap:4px}
+  .tab{display:flex;align-items:center;gap:8px;padding:14px 16px;font-size:14px;color:var(--sub);
+    cursor:pointer;font-weight:600;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:.15s}
+  .tab:hover{color:var(--primary)}
+  .tab.active{color:var(--primary-d);border-bottom-color:var(--primary)}
+  .tab .tcount{font-size:11px;font-weight:700;background:var(--gray-bg);color:var(--mute);
+    border-radius:20px;padding:1px 8px;min-width:22px;text-align:center}
+  .tab.active .tcount{background:var(--primary-bg);color:var(--primary-d)}
+  .tab .tic{font-size:15px}
+
+  /* ===== 工具条：搜索 + 新建 ===== */
+  .toolbar{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);
+    padding:13px 22px;display:flex;align-items:center;gap:12px}
+  .search{position:relative;flex:1;max-width:420px}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--mute)}
+  .search input{width:100%;border:1px solid var(--line);border-radius:9px;background:var(--gray-bg);
+    padding:9px 12px 9px 38px;font-size:13.5px;font-family:inherit;color:var(--ink);outline:none;transition:.15s}
+  .search input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px var(--primary-bg)}
+  .search input::placeholder{color:var(--mute)}
+  .search .clr{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;
+    border-radius:50%;background:var(--line);color:var(--sub);display:none;align-items:center;justify-content:center;
+    cursor:pointer;font-size:12px}
+  .search.has .clr{display:flex}
+  .tb-hint{font-size:12px;color:var(--mute);display:flex;align-items:center;gap:6px}
+  .tb-spacer{flex:1}
+  .new-btn{display:flex;align-items:center;gap:7px;background:var(--primary);color:#fff;border:none;
+    border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;
+    box-shadow:0 3px 9px rgba(37,99,201,.3)}
+  .new-btn:hover{background:var(--primary-d)}
+  .new-btn svg{width:16px;height:16px}
+  .new-btn.hide{display:none}
+  .filters-group{flex:1;display:flex;gap:10px;align-items:center}
+  .filters-group .filter-item{display:flex;align-items:center;gap:6px}
+  .filters-group .filter-item input,
+  .filters-group .filter-item select{border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:13px;background:var(--gray-bg);color:var(--ink);outline:none;transition:.15s;font-family:inherit}
+  .filters-group .filter-item select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+  .filters-group .filter-item input:focus,
+  .filters-group .filter-item select:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg);background:#fff}
+  .filters-group .filter-item input{min-width:160px}
+  .filters-group .filter-item select{min-width:120px}
+
+  /* ===== 内容区：卡片网格 ===== */
+  .page{flex:1;overflow-y:auto;padding:20px 22px 40px}
+  .page-banner{font-size:12.5px;color:var(--sub);background:var(--gray-bg);border:1px solid var(--line);
+    border-radius:9px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:9px;line-height:1.5}
+  .page-banner .bicon{font-size:16px}
+  .page-banner b{color:var(--ink)}
+
+  .skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:15px}
+
+  .skill-card{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:16px;
+    display:flex;flex-direction:column;transition:.16s;position:relative;cursor:default}
+  .skill-card:hover{border-color:#cdd9ec;box-shadow:0 8px 22px rgba(20,35,60,.08);transform:translateY(-2px)}
+  .sc-top{display:flex;align-items:flex-start;gap:11px}
+  .sc-ic{width:42px;height:42px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    font-size:20px;background:var(--gray-bg)}
+  .sc-ic.builtin{background:#e9f0fc}.sc-ic.shared{background:var(--green-bg)}.sc-ic.custom{background:var(--gold-bg)}
+  .sc-head{flex:1;min-width:0}
+  .sc-name{font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ver-badge{font-size:11px;font-weight:700;border-radius:5px;padding:1px 7px;letter-spacing:.3px}
+  .ver-badge.builtin{background:var(--primary-bg);color:var(--primary-d)}
+  .ver-badge.shared{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+  .ver-badge.custom{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-bd)}
+  .sc-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .sc-tag{font-size:10.5px;font-weight:600;border-radius:5px;padding:1px 7px}
+  .sc-tag.builtin{background:#eef3fb;color:var(--primary-d)}
+  .sc-tag.shared{background:var(--green-bg);color:var(--green)}
+  .sc-tag.custom{background:var(--gold-bg);color:var(--gold)}
+
+  .sc-id{display:flex;align-items:center;gap:7px;margin:13px 0 9px;background:var(--gray-bg);
+    border:1px solid var(--line-2);border-radius:7px;padding:7px 10px}
+  .sc-id .idlab{font-size:10.5px;color:var(--mute);font-weight:600;flex:0 0 auto}
+  .sc-id .idval{font-size:11.5px;color:var(--sub);font-family:"SF Mono",Consolas,Menlo,monospace;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+  .sc-id .idcopy{flex:0 0 auto;width:22px;height:22px;border-radius:5px;border:1px solid var(--line);
+    background:#fff;color:var(--mute);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .sc-id .idcopy:hover{color:var(--primary);border-color:var(--primary-bg)}
+  .sc-id .idcopy svg{width:13px;height:13px}
+
+  .sc-desc{font-size:12.5px;color:var(--sub);line-height:1.6;margin-bottom:12px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+  .sc-foot{margin-top:auto;display:flex;align-items:center;gap:8px;padding-top:11px;border-top:1px solid var(--line-2)}
+  .sc-meta{font-size:11.5px;color:var(--mute);display:flex;align-items:center;gap:5px}
+  .sc-ver-link{font-size:11.5px;color:var(--primary);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px}
+  .sc-ver-link:hover{text-decoration:underline}
+  .sc-ver-link svg{width:13px;height:13px}
+  .sc-foot .sp{flex:1}
+  .sc-btn{display:flex;align-items:center;gap:5px;border:1px solid var(--line);background:#fff;
+    border-radius:7px;padding:5px 11px;font-size:12px;color:var(--sub);cursor:pointer;font-weight:600}
+  .sc-btn:hover{border-color:var(--primary-bg);color:var(--primary);background:var(--gray-bg)}
+  .sc-btn svg{width:13px;height:13px}
+  .sc-btn.edit{border-color:var(--gold-bd);color:var(--gold);background:var(--gold-bg)}
+  .sc-btn.edit:hover{background:#faedd0}
+
+  /* 新建卡（自定义页首张） */
+  .create-card{border:1.6px dashed #c2cee0;background:var(--gray-bg);border-radius:13px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    cursor:pointer;min-height:210px;color:var(--primary-d);transition:.16s;text-align:center;padding:16px}
+  .create-card:hover{border-color:var(--primary);background:#fff;box-shadow:0 8px 22px rgba(20,35,60,.08)}
+  .create-card .plus{width:48px;height:48px;border-radius:50%;background:var(--primary-bg);
+    display:flex;align-items:center;justify-content:center}
+  .create-card .plus svg{width:26px;height:26px;color:var(--primary)}
+  .create-card .ct{font-size:14.5px;font-weight:700}
+  .create-card .cs{font-size:12px;color:var(--mute);font-weight:400}
+
+  .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mute)}
+  .empty .ei{font-size:42px;margin-bottom:12px}
+  .empty .et{font-size:14px;font-weight:600;color:var(--sub)}
+  .empty .es{font-size:12.5px;margin-top:5px}
+
+  /* ===== 弹窗 ===== */
+  .modal-overlay{position:fixed;inset:0;background:rgba(18,28,45,.5);backdrop-filter:blur(2px);
+    display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+  .modal-overlay.show{display:flex}
+  .modal{background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(15,25,45,.3);
+    width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;
+    animation:pop .2s ease}
+  .modal.wide{max-width:620px}
+  @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+  .modal-head{display:flex;align-items:center;gap:11px;padding:18px 22px;border-bottom:1px solid var(--line)}
+  .modal-head .mh-ic{width:38px;height:38px;border-radius:10px;background:var(--primary-bg);
+    display:flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
+  .modal-head .mh-tt{font-size:16px;font-weight:700}
+  .modal-head .mh-ss{font-size:12px;color:var(--mute);margin-top:2px}
+  .modal-head .mh-x{margin-left:auto;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);
+    background:#fff;color:var(--mute);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
+  .modal-head .mh-x:hover{background:var(--gray-bg);color:var(--ink)}
+  .modal-head .mh-x svg{width:17px;height:17px}
+  .modal-body{padding:20px 22px;overflow-y:auto}
+  .modal-foot{display:flex;align-items:center;gap:10px;padding:15px 22px;border-top:1px solid var(--line);background:var(--gray-bg)}
+  .modal-foot .sp{flex:1}
+  .mbtn{border-radius:9px;padding:9px 20px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--line);
+    background:#fff;color:var(--sub)}
+  .mbtn:hover{background:#fff;border-color:#cdd9ec}
+  .mbtn.primary{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 3px 9px rgba(37,99,201,.3)}
+  .mbtn.primary:hover{background:var(--primary-d)}
+
+  /* 新建方式选择 */
+  .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .choice-card{border:1.6px solid var(--line);border-radius:13px;padding:20px 18px;cursor:pointer;
+    transition:.16s;text-align:center;position:relative}
+  .choice-card:hover{border-color:var(--primary);background:var(--gray-bg);transform:translateY(-2px);
+    box-shadow:0 8px 22px rgba(20,35,60,.08)}
+  .choice-card .ci{width:52px;height:52px;border-radius:13px;margin:0 auto 12px;display:flex;align-items:center;
+    justify-content:center;font-size:26px}
+  .choice-card.imp .ci{background:var(--primary-bg)}
+  .choice-card.chat .ci{background:var(--purple-bg)}
+  .choice-card .cn{font-size:14.5px;font-weight:700;margin-bottom:5px}
+  .choice-card .cd{font-size:12px;color:var(--mute);line-height:1.55}
+  .choice-card .soon{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:800;color:var(--purple);
+    background:var(--purple-bg);border:1px solid var(--purple-bd);border-radius:5px;padding:1px 6px}
+
+  /* 表单 */
+  .ff{margin-bottom:17px}
+  .ff:last-child{margin-bottom:0}
+  .ff-lab{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+  .ff-lab .req{color:var(--red)}
+  .ff-lab .lock{font-size:10px;font-weight:600;color:var(--mute);background:var(--gray-bg);border:1px solid var(--line);
+    border-radius:4px;padding:1px 6px;margin-left:4px}
+  .ff-hint{font-size:11px;color:var(--mute);margin-left:auto;font-weight:400}
+  .ff input[type=text],.ff textarea{width:100%;border:1px solid var(--line);border-radius:9px;
+    padding:9px 12px;font-size:13.5px;font-family:inherit;color:var(--ink);outline:none;transition:.15s;background:#fff}
+  .ff input[type=text]:focus,.ff textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg)}
+  .ff input[disabled]{background:var(--gray-bg);color:var(--sub);cursor:not-allowed}
+  .ff textarea{resize:vertical;min-height:70px;line-height:1.6}
+  .ff input.mono{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:12.5px}
+  .char-count{font-size:11px;color:var(--mute);text-align:right;margin-top:4px}
+  .char-count.over{color:var(--red);font-weight:600}
+  .ff .err{font-size:11.5px;color:var(--red);margin-top:5px;display:none;align-items:center;gap:4px}
+  .ff.invalid input,.ff.invalid textarea{border-color:var(--red)}
+  .ff.invalid .err{display:flex}
+
+  /* 上传区 */
+  .upload-zone{border:1.6px dashed #c2cee0;border-radius:11px;background:var(--gray-bg);padding:22px 16px;
+    text-align:center;cursor:pointer;transition:.15s}
+  .upload-zone:hover{border-color:var(--primary);background:#fff}
+  .upload-zone .ui{width:44px;height:44px;border-radius:50%;background:var(--primary-bg);margin:0 auto 10px;
+    display:flex;align-items:center;justify-content:center;color:var(--primary)}
+  .upload-zone .ui svg{width:22px;height:22px}
+  .upload-zone .ut{font-size:13px;font-weight:600;color:var(--ink)}
+  .upload-zone .ut b{color:var(--primary)}
+  .upload-zone .us{font-size:11.5px;color:var(--mute);margin-top:4px}
+  .upload-file{display:none;align-items:center;gap:10px;border:1px solid var(--green-bd);background:var(--green-bg);
+    border-radius:10px;padding:11px 13px;margin-top:2px}
+  .upload-file.show{display:flex}
+  .upload-file .fi{width:34px;height:34px;border-radius:8px;background:#fff;border:1px solid var(--green-bd);
+    display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+  .upload-file .fn{font-size:13px;font-weight:600;color:var(--ink)}
+  .upload-file .fs{font-size:11px;color:var(--green);margin-top:1px}
+  .upload-file .fx{margin-left:auto;color:var(--mute);cursor:pointer;width:26px;height:26px;border-radius:6px;
+    display:flex;align-items:center;justify-content:center}
+  .upload-file .fx:hover{background:#fff;color:var(--red)}
+
+  .form-row{display:flex;gap:14px}
+  .form-row .ff{flex:1}
+
+  .edit-note{font-size:12px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-bd);
+    border-radius:9px;padding:10px 13px;line-height:1.55;margin-bottom:17px;display:flex;gap:8px;align-items:flex-start}
+  .edit-note svg{width:16px;height:16px;flex:0 0 auto;margin-top:1px}
+
+  /* 版本历史 */
+  .vh-cur{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--primary-bg);
+    border:1px solid #cfe0f7;border-radius:11px;margin-bottom:16px}
+  .vh-cur .vc-ic{font-size:22px}
+  .vh-cur .vc-id{font-size:11px;color:var(--sub);font-family:"SF Mono",Consolas,monospace;
+    word-break:break-all;line-height:1.4;margin-top:3px}
+  .vh-list{position:relative;padding-left:22px}
+  .vh-list::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .vh-item{position:relative;padding:0 0 18px}
+  .vh-item:last-child{padding-bottom:0}
+  .vh-item::before{content:"";position:absolute;left:-19px;top:3px;width:11px;height:11px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--line)}
+  .vh-item.cur::before{border-color:var(--primary);background:var(--primary)}
+  .vh-top{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+  .vh-ver{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .vh-cur-tag{font-size:10px;font-weight:800;color:#fff;background:var(--primary);border-radius:5px;padding:1px 7px}
+  .vh-date{font-size:11.5px;color:var(--mute);margin-left:auto}
+  .vh-log{font-size:12.5px;color:var(--sub);line-height:1.55;background:var(--gray-bg);
+    border:1px solid var(--line-2);border-radius:8px;padding:8px 11px}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 20px;border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.25s;z-index:400;
+    display:flex;align-items:center;gap:8px}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast svg{width:16px;height:16px;color:var(--green-bd)}
+
+  @media(max-width:720px){.choice-grid{grid-template-columns:1fr}.form-row{flex-direction:column;gap:0}}
+
+  .table-wrap{background:var(--paper);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-bottom:0}
+  .table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .table th{text-align:left;padding:13px 18px;font-weight:600;color:var(--sub);border-bottom:1px solid var(--line);background:var(--gray-bg);font-size:12.5px;white-space:nowrap}
+  .table td{padding:14px 18px;border-bottom:1px solid var(--line-2);color:var(--ink);vertical-align:middle}
+  .table tr:last-child td{border-bottom:none}
+  .table tr:hover td{background:#f8fafc}
+  .table .col-actions{text-align:right}
+  .app-cell{display:flex;align-items:center;gap:11px}
+  .app-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#60a5fa,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex:0 0 auto}
+  .app-name{font-weight:600;color:var(--ink);font-size:13.5px}
+  .status-tag{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+  .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .status-dot.running{background:var(--green)}
+  .status-dot.offline{background:#d1d5db}
+  .status-dot.stopped{background:var(--amber)}
+  .actions{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+  .action-link{color:var(--primary);font-size:13px;cursor:pointer;font-weight:500}
+  .action-link:hover{text-decoration:underline}
+  .action-divider{color:var(--line);font-size:12px}
+  .pagination-wrap{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--sub);background:var(--paper)}
+  .pagination-left{display:flex;align-items:center;gap:8px}
+  .page-size-select{padding:5px 24px 5px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px;background:#fff;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;cursor:pointer}
+  .pagination-right{display:flex;align-items:center;gap:8px}
+  .page-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:13px;cursor:pointer;min-width:34px;text-align:center;font-weight:500}
+  .page-btn:hover{background:var(--gray-bg);border-color:#cdd9ec}
+  .page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 3px 9px rgba(37,99,201,.3)}
+  .page-btn.disabled{opacity:0.4;cursor:not-allowed}
+  .page-jump{display:flex;align-items:center;gap:6px}
+  .page-jump input{width:40px;padding:5px 8px;border-radius:8px;border:1px solid var(--line);font-size:13px;text-align:center;outline:none}
+  .page-jump input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg)}
+  .mode-cards{display:flex;flex-direction:column;gap:10px}
+  .mode-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:10px;border:1.6px solid var(--line);cursor:pointer;transition:all .15s;position:relative;background:#fff}
+  .mode-card:hover{border-color:#bfdbfe;background:#f8fbff}
+  .mode-card.disabled{opacity:.5;cursor:not-allowed;pointer-events:none;border-color:var(--line);background:var(--gray-bg)}
+  .mode-card.disabled .radio{border-color:var(--line);background:transparent}
+  .mode-card.selected{border-color:var(--primary);background:var(--primary-bg);box-shadow:0 0 0 1px var(--primary)}
+  .mode-card .radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:2px;transition:all .15s}
+  .mode-card.selected .radio{border-color:var(--primary);background:var(--primary)}
+  .mode-card .radio::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff;display:none}
+  .mode-card.selected .radio::after{display:block}
+  .mode-card-info{flex:1}
+  .mode-card-title{font-size:14px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .mode-card-desc{font-size:12.5px;color:var(--sub);margin-top:5px;line-height:1.55}
+  .mode-card-desc a{color:var(--primary);text-decoration:none}
+  .mode-card-desc a:hover{text-decoration:underline}
+  .icon-upload-wrap{display:flex;align-items:flex-start;gap:16px}
+  .icon-preview{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;flex:0 0 auto;position:relative}
+  .icon-edit{position:absolute;right:-2px;bottom:-2px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--sub);font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+  .icon-edit:hover{background:var(--gray-bg);color:var(--ink)}
+  .modal-confirm{max-width:400px}
+  .modal-confirm .modal-body{text-align:center;padding:24px 22px}
+  .modal-confirm .confirm-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:10px}
+  .modal-confirm .confirm-desc{font-size:13px;color:var(--sub);line-height:1.6}
+  .modal-confirm .modal-foot{justify-content:center;gap:12px}
+  .mbtn.danger{background:var(--red);color:#fff;border-color:var(--red)}
+  .mbtn.danger:hover{background:#c24942}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="mark">EBC</div>
+      <div>
+        <div class="tt">Agent Studio</div>
+        <div class="ss">AI 开发平台 · EBCAI版</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-cap">平台导航</div>
+      <div class="nav-item">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 01-1.2 4.3 8.5 8.5 0 01-7.3 4.2 8.4 8.4 0 01-4.3-1.2L3 20l1.2-5.2A8.4 8.4 0 013 10.5a8.5 8.5 0 014.2-7.3A8.4 8.4 0 0111.5 2h.5a8.5 8.5 0 018 8v.5z"></path></svg></span>
+        对话测试
+      </div>
+      <div class="nav-cap">构建与能力</div>
+      <div class="nav-item is-active">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="8" width="16" height="11" rx="2"></rect><path d="M12 8V4M8.5 13h.01M15.5 13h.01M2 13h2M20 13h2"></path></svg></span>
+        Agent 开发中心
+      </div>
+      <div class="nav-group open">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.6 2.6-2-2 2.6-2.6z"></path></svg></span>
+          能力与工具中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"></path></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">MCP 接入 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">Tool 工具 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">Skill 技能 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4a1 1 0 011-1h13v15H6a2 2 0 00-2 2V5z"></path><path d="M19 18H6a2 2 0 00-2 2"></path></svg></span>
+          知识管理中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"></path></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">知识库 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.6 3.6 3 8 3s8-1.4 8-3V5M4 11v6c0 1.6 3.6 3 8 3s8-1.4 8-3v-6"></path></svg></span>
+          数据管理中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"></path></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">结构化数据接入 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">非结构化数据接入 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1 1-1.5 4-1.5 4s3-.5 4-1.5M14 4s4 0 6 2 2 6 2 6c-3 4-7 6-9 6l-3-3c0-2 2-6 4-9z"></path><circle cx="14.5" cy="9.5" r="1.4"></circle></svg></span>
+          发布与集成中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"></path></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">发布到业务端 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">外部集成 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+      <div class="nav-cap">运营</div>
+      <div class="nav-item">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"></path></svg></span>
+        调试与评测中心
+      </div>
+      <div class="nav-item">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg></span>
+        运营监控中心
+      </div>
+    </nav>
+    <div class="side-foot">
+      <div class="avatar">张</div>
+      <div class="who">
+        <div class="nm">张明</div>
+        <div class="rl">Agent 开发人员</div>
+      </div>
+      <span class="gear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 13a7.5 7.5 0 000-2l2-1.5-2-3.5-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.5L4.6 11a7.5 7.5 0 000 2l-2 1.5 2 3.5 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.5-2-1.5z"></path></svg></span>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb">应用开发</div>
+      <div class="top-acts">
+        <div class="gbtn" onclick="showToast('使用文档（演示占位）')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>使用文档</div>
+      </div>
+    </header>
+    <div class="toolbar">
+      <div class="filters-group" id="filtersGroup">
+        <div class="filter-item">
+          <input type="text" placeholder="应用模糊搜索">
+        </div>
+        <div class="filter-item">
+          <select>
+            <option>全部</option>
+            <option>标准模式</option>
+            <option>Multi-Agent模式</option>
+            <option>单工作流模式</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <select>
+            <option>全部</option>
+            <option>未上线</option>
+            <option>运行中</option>
+            <option>已停用</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <input type="text" placeholder="修改人/创建人模糊搜索">
+        </div>
+      </div>
+      <div class="tb-spacer"></div>
+      <button class="new-btn" id="btnNewApp" onclick="openNewAppModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"></path></svg>新建应用
+      </button>
+      <button class="gbtn" id="btnImportApp" onclick="importApp()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>导入应用
+      </button>
+    </div>
+    <div class="page">
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>应用</th>
+              <th>应用模式</th>
+              <th>状态</th>
+              <th>修改时间</th>
+              <th>最后修改人</th>
+              <th>创建人</th>
+              <th class="col-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="app-cell">
+                  <div class="app-icon">🤖</div>
+                  <span class="app-name">我的智能体应用02</span>
+                </div>
+              </td>
+              <td>单agent模式</td>
+              <td><span class="status-tag"><span class="status-dot running"></span>运行中</span></td>
+              <td>2026-07-06 10:15:07</td>
+              <td>张明</td>
+              <td>张明</td>
+              <td class="col-actions">
+                <div class="actions">
+                  <span class="action-link" onclick="goEditor()">查看</span>
+                  <span class="action-divider">,</span>
+                  <span class="action-link" onclick="showToast('已复制应用（演示）')">复制</span>
+                  <span class="action-divider">,</span>
+                  <span class="action-link" onclick="openDeleteModal(this)">删除</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-cell">
+                  <div class="app-icon">🤖</div>
+                  <span class="app-name">我的智能体应用01</span>
+                </div>
+              </td>
+              <td>Multi-Agent模式</td>
+              <td><span class="status-tag"><span class="status-dot offline"></span>未上线</span></td>
+              <td>2026-06-30 16:55:47</td>
+              <td>张明</td>
+              <td>张明</td>
+              <td class="col-actions">
+                <div class="actions">
+                  <span class="action-link" onclick="goEditor()">查看</span>
+                  <span class="action-divider">,</span>
+                  <span class="action-link" onclick="showToast('已复制应用（演示）')">复制</span>
+                  <span class="action-divider">,</span>
+                  <span class="action-link" onclick="openDeleteModal(this)">删除</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-wrap">
+        <div class="pagination-left">
+          <span>共 2 项，每页显示</span>
+          <select class="page-size-select">
+            <option>15</option>
+            <option>30</option>
+            <option>50</option>
+          </select>
+        </div>
+        <div class="pagination-right">
+          <button class="page-btn disabled">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn disabled">›</button>
+          <div class="page-jump">
+            <span>跳至</span>
+            <input type="text" value="1">
+            <span>页</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalNewAppOverlay" onclick="if(event.target===this)closeNewAppModal()">
+  <div class="modal" id="modalNewApp">
+    <div class="modal-head">
+      <div class="mh-ic">✨</div>
+      <div>
+        <div class="mh-tt">新建应用</div>
+      </div>
+      <div class="mh-x" onclick="closeNewAppModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="ff">
+        <div class="ff-lab">应用名称 <span class="req">*</span></div>
+        <div class="icon-upload-wrap">
+          <input type="text" id="appNameInput" value="我的智能体应用" maxlength="30" style="flex:1;">
+          <div class="icon-preview" id="appIconPreview">
+            🤖
+            <div class="icon-edit" onclick="showToast('上传应用图标（演示占位）')">✎</div>
+          </div>
+        </div>
+        <div class="char-count"><span id="nameCount">7</span>/30</div>
+      </div>
+      <div class="ff">
+        <div class="ff-lab">应用简介 <span style="font-size:11px;color:var(--mute);font-weight:400;margin-left:4px;">非必填</span></div>
+        <textarea id="appIntroInput" placeholder="请简单描述智能体将扮演什么角色，或介绍智能体的功能。" maxlength="150"></textarea>
+        <div class="char-count"><span id="introCount">0</span>/150</div>
+      </div>
+      <div class="ff">
+        <div class="ff-lab">应用模式 <span class="req">*</span></div>
+        <div class="mode-cards" id="modeCards">
+          <div class="mode-card selected" data-mode="standard" onclick="selectMode(this)">
+            <div class="radio"></div>
+            <div class="mode-card-info">
+              <div class="mode-card-title">单agent模式</div>
+              <div class="mode-card-desc">回复更加精确和稳定，通过标准路径实现。适用于企业知识、产品说明等严肃问答场景。<a href="javascript:void(0)" onclick="return false">了解更多</a></div>
+            </div>
+          </div>
+          <div class="mode-card disabled" data-mode="multi-agent">
+            <div class="radio"></div>
+            <div class="mode-card-info">
+              <div class="mode-card-title">Multi-Agent 模式</div>
+              <div class="mode-card-desc">支持大模型自主规划执行路径，灵活调用工具。适用于需要灵活响应、多工具调用和多Agent协同的场景。<a href="javascript:void(0)" onclick="return false">了解更多</a></div>
+            </div>
+          </div>
+          <div class="mode-card disabled" data-mode="workflow">
+            <div class="radio"></div>
+            <div class="mode-card-info">
+              <div class="mode-card-title">单工作流模式</div>
+              <div class="mode-card-desc">使用指定的工作流来进行响应用户所有对话。适用于明确业务流程的企业场景。<a href="javascript:void(0)" onclick="return false">了解更多</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="sp"></div>
+      <button class="mbtn" onclick="closeNewAppModal()">取消</button>
+      <button class="mbtn primary" id="btnCreateConfirm" onclick="confirmCreate()">新建</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalDeleteOverlay" onclick="if(event.target===this)closeDeleteModal()">
+  <div class="modal modal-confirm" id="modalDelete">
+    <div class="modal-body">
+      <div class="confirm-title" id="deleteTitle">确认删除该应用吗？</div>
+      <div class="confirm-desc">删除后，该应用的所有数据将被清空，请谨慎操作！</div>
+    </div>
+    <div class="modal-foot">
+      <button class="mbtn danger" onclick="confirmDelete()">删除</button>
+      <button class="mbtn" onclick="closeDeleteModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="appToast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+  <span id="appToastMsg"></span>
+</div>
+<script>
+/* ===== 页面跳转：新建 / 查看 → 智能体编辑器（编辑器内导航收起、内容铺满窗口） ===== */
+var EDITOR_URL = 'Agent_Studio_智能体编辑器_dc.html';
+function goEditor(){ window.location.href = EDITOR_URL; }
+
+/* ===== 轻提示 Toast ===== */
+var _toastTimer = null;
+function showToast(msg){
+  var t = document.getElementById('appToast');
+  if(!t) return;
+  document.getElementById('appToastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+/* ===== 新建应用弹窗 ===== */
+function openNewAppModal(){
+  document.getElementById('modalNewAppOverlay').classList.add('show');
+  document.getElementById('modalNewApp').classList.add('show');
+}
+function closeNewAppModal(){
+  document.getElementById('modalNewAppOverlay').classList.remove('show');
+  document.getElementById('modalNewApp').classList.remove('show');
+}
+
+/* ===== 删除确认弹窗（按所在行动态读取应用名，修复原来固定显示“…02”的问题） ===== */
+var _delName = '';
+function openDeleteModal(el){
+  _delName = '该应用';
+  try{
+    if(el && el.closest){
+      var row = el.closest('tr');
+      var nm = row && row.querySelector('.app-name');
+      if(nm) _delName = nm.textContent.trim();
+    }
+  }catch(e){}
+  var title = document.getElementById('deleteTitle');
+  if(title) title.textContent = '确认删除' + _delName + '吗？';
+  document.getElementById('modalDeleteOverlay').classList.add('show');
+  document.getElementById('modalDelete').classList.add('show');
+}
+function closeDeleteModal(){
+  document.getElementById('modalDeleteOverlay').classList.remove('show');
+  document.getElementById('modalDelete').classList.remove('show');
+}
+function confirmDelete(){
+  closeDeleteModal();
+  showToast('已删除“' + _delName + '”（演示，未真实移除）');
+}
+
+/* ===== 应用模式选择 ===== */
+function selectMode(el){
+  if(el.classList.contains('disabled')) return;
+  document.querySelectorAll('#modeCards .mode-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+}
+
+/* ===== 名称 / 简介 字数统计（进入时先同步一次） ===== */
+var nameInput = document.getElementById('appNameInput');
+var nameCount = document.getElementById('nameCount');
+var introInput = document.getElementById('appIntroInput');
+var introCount = document.getElementById('introCount');
+if(nameInput && nameCount){
+  nameCount.textContent = nameInput.value.length;
+  nameInput.addEventListener('input', function(){ nameCount.textContent = this.value.length; });
+}
+if(introInput && introCount){
+  introCount.textContent = introInput.value.length;
+  introInput.addEventListener('input', function(){ introCount.textContent = this.value.length; });
+}
+
+/* ===== 新建 → 校验应用名称后跳转编辑器 ===== */
+function confirmCreate(){
+  if(nameInput && !nameInput.value.trim()){
+    showToast('请先填写应用名称');
+    nameInput.focus();
+    return;
+  }
+  goEditor();
+}
+
+/* ===== 导入应用（演示占位） ===== */
+function importApp(){
+  showToast('导入应用（演示占位）');
+}
+
+/* ===== 左侧导航分组：展开 / 收起（修复原来点击箭头无反应的问题） ===== */
+document.querySelectorAll('.nav-group .ng-head').forEach(function(head){
+  head.addEventListener('click', function(){
+    head.parentElement.classList.toggle('open');
+  });
+});
+</script>
+<!-- ====================================================================
+  PM 后端交底标注层（蓝色泡泡）· 通用注入代码 v1
+  用法：把本文件全部内容原样复制到目标原型 HTML 的 </body> 之前
+       （必须位于原型自身脚本之后）。
+  规则：只允许编辑 pmNoteData 里的 JSON（notes / updatedAt / overlaySelector），
+       严禁改动 pmNoteStyle 与 pmNoteEngine。
+  数据字段：
+    anchor  CSS 选择器（优先 #id；锚点隐藏时泡泡自动隐藏）
+    fx/fy   泡泡中心相对锚点矩形的比例位置（0=左/上，1=右/下，可越界）
+    ox/oy   像素微调
+    title   标题（≤14字）   body 正文（换行写 \n，每行以 · 开头）
+===================================================================== -->
+<style id="pmNoteStyle">
+  .pm-root{position:fixed;inset:0;pointer-events:none;z-index:99990;
+    font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;line-height:1.5}
+  .pm-root *{box-sizing:border-box}
+  .pm-dot{position:fixed;z-index:2;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;
+    background:#2563c9;color:#fff;font-size:10.5px;font-weight:800;line-height:18px;text-align:center;
+    pointer-events:auto;cursor:pointer;user-select:none;
+    box-shadow:0 0 0 2px #fff,0 2px 8px rgba(21,80,180,.45);transition:transform .12s}
+  .pm-dot:hover{transform:scale(1.28)}
+  .pm-dot.pm-pinned{background:#1c4ea3;box-shadow:0 0 0 2px #fff,0 0 0 5px rgba(37,99,201,.28),0 2px 8px rgba(21,80,180,.45)}
+  .pm-root.pm-editmode .pm-dot{cursor:grab;box-shadow:0 0 0 2px #fff,0 0 0 4px rgba(201,138,30,.45)}
+  .pm-root.pm-adding .pm-dot{pointer-events:none;opacity:.35}
+
+  .pm-tip{position:fixed;z-index:3;width:340px;max-width:calc(100vw - 24px);background:#fff;
+    border:1px solid #cfdcf1;border-radius:11px;box-shadow:0 16px 44px rgba(15,30,60,.24);
+    pointer-events:auto;display:none;overflow:hidden;animation:pmpop .13s ease}
+  .pm-tip.show{display:block}
+  @keyframes pmpop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .pm-tip-h{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,#2563c9,#2c6fd6);
+    color:#fff;padding:8px 12px;font-size:12.5px;font-weight:700}
+  .pm-tip-h .pm-no{flex:0 0 auto;background:rgba(255,255,255,.24);border-radius:4px;font-size:10px;padding:1px 6px}
+  .pm-tip-b{padding:11px 13px;font-size:12.3px;line-height:1.78;color:#28313d;white-space:pre-line;
+    max-height:320px;overflow-y:auto}
+  .pm-tip-f{padding:6px 13px;border-top:1px solid #eef1f6;font-size:10.5px;color:#9099a6}
+
+  .pm-hl{position:fixed;z-index:5;pointer-events:none;border:2px dashed #2563c9;border-radius:4px;
+    background:rgba(37,99,201,.07);display:none}
+  .pm-pick{position:fixed;inset:0;z-index:4;cursor:crosshair;background:rgba(22,35,59,.05);
+    pointer-events:auto;display:none}
+  .pm-pick-tip{position:absolute;top:14px;left:50%;transform:translateX(-50%);pointer-events:none;
+    background:#16233b;color:#fff;font-size:12px;font-weight:600;border-radius:9px;padding:8px 16px;
+    box-shadow:0 8px 24px rgba(10,20,40,.35);white-space:nowrap}
+
+  .pm-bar{position:fixed;right:16px;bottom:16px;z-index:6;pointer-events:auto;display:flex;align-items:center;gap:6px;
+    background:#16233b;color:#cfd8e6;border-radius:12px;padding:7px 9px;font-size:12px;
+    box-shadow:0 10px 30px rgba(10,20,40,.4)}
+  .pm-cap{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#fff;letter-spacing:.4px;padding:0 5px 0 3px}
+  .pm-cap::before{content:"";width:9px;height:9px;border-radius:50%;background:#2563c9;
+    box-shadow:0 0 0 2px rgba(255,255,255,.25);flex:0 0 auto}
+  .pm-cap b{font-size:10px;background:rgba(255,255,255,.14);border-radius:8px;padding:0 6px;font-weight:700}
+  .pm-btn{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;cursor:pointer;user-select:none;
+    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);font-weight:600;white-space:nowrap;position:relative}
+  .pm-btn:hover{background:rgba(255,255,255,.13);color:#fff}
+  .pm-btn.on{background:#2563c9;border-color:#2563c9;color:#fff}
+  .pm-btn.pm-dirty::after{content:"";position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;
+    background:#e9c25f;box-shadow:0 0 0 2px #16233b}
+
+  .pm-ed{position:fixed;z-index:7;top:50%;right:24px;transform:translateY(-50%);width:380px;max-width:calc(100vw - 32px);
+    background:#fff;border:1px solid #cfdcf1;border-radius:14px;box-shadow:0 24px 64px rgba(15,25,45,.35);
+    pointer-events:auto;display:none;flex-direction:column;overflow:hidden}
+  .pm-ed.show{display:flex}
+  .pm-ed-h{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,#2563c9,#2c6fd6);
+    color:#fff;padding:11px 14px;font-size:13.5px;font-weight:700}
+  .pm-ed-x{margin-left:auto;width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;background:rgba(255,255,255,.15);font-size:13px}
+  .pm-ed-x:hover{background:rgba(255,255,255,.3)}
+  .pm-ed-b{padding:14px 16px;overflow-y:auto;max-height:62vh}
+  .pm-ed-lab{display:block;font-size:12.5px;font-weight:700;color:#1c2733;margin:0 0 6px}
+  .pm-ed-b input[type=text],.pm-ed-b textarea{width:100%;border:1px solid #e6eaf0;border-radius:9px;
+    padding:8px 11px;font-size:12.8px;font-family:inherit;color:#1c2733;outline:none;background:#fff;line-height:1.6}
+  .pm-ed-b input[type=text]:focus,.pm-ed-b textarea:focus{border-color:#2563c9;box-shadow:0 0 0 3px #eef3fb}
+  .pm-ed-b input[type=text]{margin-bottom:13px}
+  .pm-ed-b textarea{resize:vertical;min-height:150px}
+  .pm-ed-meta{margin-top:10px;font-size:10.5px;color:#9099a6;line-height:1.5;word-break:break-all}
+  .pm-ed-meta code{font-family:"SF Mono",Consolas,Menlo,monospace;background:#f6f8fb;
+    border:1px solid #eef1f6;border-radius:4px;padding:1px 5px}
+  .pm-ed-note{margin-top:8px;font-size:11px;color:#c8842a;background:#fbf2e6;
+    border:1px solid #f0dcae;border-radius:8px;padding:7px 10px;line-height:1.55}
+  .pm-ed-f{display:flex;align-items:center;gap:9px;padding:12px 16px;border-top:1px solid #e6eaf0;background:#f6f8fb}
+  .pm-ed-btn{border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:600;cursor:pointer;
+    border:1px solid #e6eaf0;background:#fff;color:#5b6573;font-family:inherit}
+  .pm-ed-btn:hover{border-color:#cdd9ec}
+  .pm-ed-btn.pm-primary{background:#2563c9;border-color:#2563c9;color:#fff}
+  .pm-ed-btn.pm-primary:hover{background:#1c4ea3}
+  .pm-ed-btn.pm-danger{color:#d0584f;border-color:#f0cdca;background:#fbeceb}
+  .pm-ed-btn.pm-danger:hover{background:#f7dbd8}
+
+  .pm-toast{position:fixed;z-index:8;left:50%;bottom:30px;transform:translateX(-50%) translateY(16px);
+    background:#1c2733;color:#fff;font-size:13px;font-weight:500;padding:10px 18px;border-radius:9px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.25s;max-width:calc(100vw - 40px)}
+  .pm-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+
+<script type="application/json" id="pmNoteData">
+{
+    "v":  1,
+    "updatedAt":  "2026-07-08T08:44:25.322Z",
+    "overlaySelector":  ".modal-overlay.show",
+    "notes":  [
+                  {
+                      "id":  "n01",
+                      "anchor":  ".sidebar",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  0,
+                      "oy":  8,
+                      "title":  "平台导航",
+                      "body":  "【涉及角色】Agent 开发人员\n【逻辑说明】\n1、当前高亮「Agent 开发中心」\n2、「能力与工具中心」默认展开\n3、导航分组支持展开/收起\n4、MVP 标识表示本期可演示入口"
+                  },
+                  {
+                      "id":  "n02",
+                      "anchor":  ".top-acts .gbtn",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "使用文档",
+                      "body":  "【类型】按钮\n【规则说明】点击后展示轻提示「使用文档（演示占位）」\n【逻辑说明】本期仅展示入口，无文档页跳转"
+                  },
+                  {
+                      "id":  "n03",
+                      "anchor":  "#filtersGroup",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "筛选区域",
+                      "body":  "【类型】筛选栏\n【逻辑说明】\n1、包含应用搜索、应用模式、状态、人员搜索\n2、筛选条件变化后列表按条件刷新\n3、分页重置为第 1 页\n4、本原型仅展示控件，不改变静态列表"
+                  },
+                  {
+                      "id":  "n04",
+                      "anchor":  "#filtersGroup .filter-item:nth-child(1) input",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "应用搜索",
+                      "body":  "【类型】输入框\n【默认值】空，提示文案「应用模糊搜索」\n【必录】否\n【规则说明】按应用名称模糊匹配，忽略前后空格"
+                  },
+                  {
+                      "id":  "n05",
+                      "anchor":  "#filtersGroup .filter-item:nth-child(2) select",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "模式筛选",
+                      "body":  "【类型】下拉筛选框\n【枚举值】全部、标准模式、Multi-Agent模式、单工作流模式\n【默认值】全部\n【规则说明】选择后仅展示对应应用模式"
+                  },
+                  {
+                      "id":  "n06",
+                      "anchor":  "#filtersGroup .filter-item:nth-child(3) select",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "状态筛选",
+                      "body":  "【类型】下拉筛选框\n【枚举值】全部、未上线、运行中、已停用\n【默认值】全部\n【规则说明】选择后仅展示对应状态应用"
+                  },
+                  {
+                      "id":  "n07",
+                      "anchor":  "#filtersGroup .filter-item:nth-child(4) input",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "人员搜索",
+                      "body":  "【类型】输入框\n【默认值】空，提示文案「修改人/创建人模糊搜索」\n【必录】否\n【规则说明】按最后修改人或创建人姓名模糊匹配"
+                  },
+                  {
+                      "id":  "n08",
+                      "anchor":  "#btnNewApp",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "新建应用",
+                      "body":  "【类型】按钮\n【规则说明】点击打开「新建应用」弹窗\n【逻辑说明】\n1、默认应用名称为「我的智能体应用」\n2、默认选中「单agent模式」\n3、提交成功后进入智能体编辑器页"
+                  },
+                  {
+                      "id":  "n09",
+                      "anchor":  "#btnImportApp",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "导入应用",
+                      "body":  "【类型】按钮\n【规则说明】本期仅展示入口\n【逻辑说明】点击后提示「导入应用（演示占位）」"
+                  },
+                  {
+                      "id":  "n10",
+                      "anchor":  ".table-wrap",
+                      "fx":  1,
+                      "fy":  0.5,
+                      "ox":  14,
+                      "oy":  0,
+                      "title":  "应用列表",
+                      "body":  "【类型】数据表格\n【逻辑说明】\n1、排序规则：按修改时间倒序展示\n2、字段：应用、应用模式、状态、修改时间、最后修改人、创建人、操作\n3、时间格式：YYYY-MM-DD HH:MM:SS\n4、空态提示「暂无应用，点击新建应用开始创建」"
+                  },
+                  {
+                      "id":  "n11",
+                      "anchor":  ".table tbody tr:first-child .app-name",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "应用名称",
+                      "body":  "【类型】文本\n【规则说明】展示应用名称，查看操作进入该应用编辑器\n【逻辑说明】\n1、名称唯一，不允许重复\n2、长度限制：2-30 个字符\n3、支持中文、英文、数字、下划线、中横线"
+                  },
+                  {
+                      "id":  "n12",
+                      "anchor":  ".table tbody tr:first-child td:nth-child(2)",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "应用模式列",
+                      "body":  "【类型】文本\n【枚举值】单agent模式、Multi-Agent模式、单工作流模式\n【规则说明】展示创建时选择的应用模式\n【逻辑说明】入口新建本期只能创建单agent模式"
+                  },
+                  {
+                      "id":  "n13",
+                      "anchor":  ".table tbody tr:first-child .status-tag",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "状态标签",
+                      "body":  "【类型】状态标签\n【枚举值】未上线、运行中、已停用\n【逻辑说明】\n1、未上线：创建后未发布\n2、运行中：已发布并对外服务\n3、已停用：发布环境暂停服务"
+                  },
+                  {
+                      "id":  "n14",
+                      "anchor":  ".table tbody tr:first-child td:nth-child(4)",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "修改时间",
+                      "body":  "【类型】文本\n【规则说明】展示最近一次编辑、保存或发布产生的更新时间\n【逻辑说明】创建后未编辑时与创建时间一致"
+                  },
+                  {
+                      "id":  "n15",
+                      "anchor":  ".table tbody tr:first-child td:nth-child(5)",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "最后修改人",
+                      "body":  "【类型】文本\n【规则说明】展示最近一次修改该应用的用户\n【逻辑说明】新建应用时默认等于创建人"
+                  },
+                  {
+                      "id":  "n16",
+                      "anchor":  ".table tbody tr:first-child td:nth-child(6)",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "创建人",
+                      "body":  "【类型】文本\n【规则说明】展示首次创建应用的用户\n【逻辑说明】创建人保存后固定，不随后续编辑改变"
+                  },
+                  {
+                      "id":  "n17",
+                      "anchor":  ".table tbody tr:first-child .actions .action-link:nth-child(1)",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "查看操作",
+                      "body":  "【类型】操作链接\n【规则说明】点击进入智能体编辑器页\n【逻辑说明】列表行应用与编辑器当前示例应用保持同一演示对象"
+                  },
+                  {
+                      "id":  "n18",
+                      "anchor":  ".table tbody tr:first-child .actions .action-link:nth-child(3)",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "复制操作",
+                      "body":  "【类型】操作链接\n【规则说明】本期为演示反馈\n【逻辑说明】点击后提示「已复制应用（演示）」；不新增列表记录"
+                  },
+                  {
+                      "id":  "n19",
+                      "anchor":  ".table tbody tr:first-child .actions .action-link:nth-child(5)",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "删除入口",
+                      "body":  "【类型】操作链接\n【规则说明】点击后打开删除确认弹窗\n【逻辑说明】弹窗标题按当前行应用名称动态生成"
+                  },
+                  {
+                      "id":  "n20",
+                      "anchor":  ".pagination-wrap",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  0,
+                      "title":  "分页",
+                      "body":  "【类型】分页组件\n【默认值】第 1 页，每页 15 条\n【枚举值】15、30、50\n【逻辑说明】展示总数、上一页、下一页、页码和跳页输入"
+                  },
+                  {
+                      "id":  "n21",
+                      "anchor":  "#modalNewApp",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  0,
+                      "oy":  0,
+                      "title":  "新建弹窗",
+                      "body":  "【类型】弹窗\n【前置条件】点击「新建应用」\n【逻辑说明】\n1、包含名称、图标、简介、应用模式\n2、右上关闭、取消、遮罩点击均关闭弹窗\n3、关闭不保存未提交内容"
+                  },
+                  {
+                      "id":  "n22",
+                      "anchor":  "#appNameInput",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "名称输入",
+                      "body":  "【类型】输入框\n【默认值】我的智能体应用\n【必录】是\n【规则说明】\n1、长度限制：2-30 个字符\n2、实时显示字数\n3、为空时提示「请先填写应用名称」"
+                  },
+                  {
+                      "id":  "n23",
+                      "anchor":  "#appIconPreview",
+                      "fx":  1,
+                      "fy":  0.5,
+                      "ox":  14,
+                      "oy":  0,
+                      "title":  "应用图标",
+                      "body":  "【类型】上传入口\n【默认值】机器人图标\n【规则说明】点击编辑角标提示「上传应用图标（演示占位）」\n【逻辑说明】本期不实际上传或替换图标"
+                  },
+                  {
+                      "id":  "n24",
+                      "anchor":  "#appIntroInput",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  7,
+                      "title":  "应用简介",
+                      "body":  "【类型】文本域\n【默认值】空，提示文案「请简单描述智能体将扮演什么角色，或介绍智能体的功能。」\n【必录】否\n【规则说明】长度限制：0-150 个字符，实时显示字数"
+                  },
+                  {
+                      "id":  "n25",
+                      "anchor":  "#modeCards",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  14,
+                      "oy":  0,
+                      "title":  "应用模式",
+                      "body":  "【类型】选择卡片组\n【默认值】单agent模式\n【逻辑说明】\n1、本期仅单agent模式可选\n2、Multi-Agent模式和单工作流模式置灰\n3、了解更多不跳转页面"
+                  },
+                  {
+                      "id":  "n26",
+                      "anchor":  "#modeCards .mode-card[data-mode=\u0027standard\u0027]",
+                      "fx":  1,
+                      "fy":  0.5,
+                      "ox":  14,
+                      "oy":  0,
+                      "title":  "单agent模式",
+                      "body":  "【类型】选择卡片\n【默认值】选中\n【规则说明】适用于企业知识、产品说明等严肃问答场景\n【逻辑说明】本期创建应用固定采用此模式"
+                  },
+                  {
+                      "id":  "n27",
+                      "anchor":  "#modeCards .mode-card[data-mode=\u0027multi-agent\u0027]",
+                      "fx":  1,
+                      "fy":  0.5,
+                      "ox":  14,
+                      "oy":  0,
+                      "title":  "多Agent占位",
+                      "body":  "【类型】选择卡片\n【默认值】未选中、置灰\n【规则说明】本期仅展示入口，不可点击\n【逻辑说明】用于后续多 Agent 协同场景"
+                  },
+                  {
+                      "id":  "n28",
+                      "anchor":  "#modeCards .mode-card[data-mode=\u0027workflow\u0027]",
+                      "fx":  1,
+                      "fy":  0.5,
+                      "ox":  14,
+                      "oy":  0,
+                      "title":  "工作流占位",
+                      "body":  "【类型】选择卡片\n【默认值】未选中、置灰\n【规则说明】本期仅展示入口，不可点击\n【逻辑说明】用于后续固定流程编排场景"
+                  },
+                  {
+                      "id":  "n29",
+                      "anchor":  "#btnCreateConfirm",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "确认新建",
+                      "body":  "【类型】按钮\n【规则说明】点击后校验应用名称\n【逻辑说明】\n1、名称为空提示「请先填写应用名称」\n2、校验通过后跳转智能体编辑器\n3、本原型不向列表追加新行"
+                  },
+                  {
+                      "id":  "n30",
+                      "anchor":  "#modalDelete",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  0,
+                      "oy":  0,
+                      "title":  "删除确认",
+                      "body":  "【类型】确认弹窗\n【前置条件】点击列表行「删除」\n【规则说明】标题显示当前行应用名称\n【逻辑说明】确认后提示「已删除"
+                  },
+                  {
+                      "id":  "n31",
+                      "anchor":  "#modalDelete .mbtn.danger",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  2,
+                      "oy":  -4,
+                      "title":  "确认删除",
+                      "body":  "【类型】按钮\n【规则说明】点击后关闭弹窗并显示删除结果提示\n【逻辑说明】本期不真实移除列表数据"
+                  },
+                  {
+                      "id":  "n32",
+                      "anchor":  "#appToast",
+                      "fx":  1,
+                      "fy":  0,
+                      "ox":  0,
+                      "oy":  -6,
+                      "title":  "轻提示",
+                      "body":  "【类型】全局反馈\n【规则说明】用于导入、复制、删除、使用文档等演示操作\n【逻辑说明】提示展示约 2.2 秒后自动消失"
+                  }
+              ]
+}
+</script>
+
+<script id="pmNoteEngine">
+(function(){
+"use strict";
+var FILE_NAME=(function(){
+  try{
+    var p=decodeURIComponent((location.pathname.split("/").pop()||"").split("?")[0]);
+    if(/\.html?$/i.test(p)) return p;
+  }catch(e){}
+  return "prototype.html";
+})();
+var LS_KEY="pmNotes:"+FILE_NAME;
+var dataEl=document.getElementById("pmNoteData");
+
+var DATA={v:1,updatedAt:"",notes:[]};
+try{ var parsed=JSON.parse(dataEl.textContent); if(parsed&&parsed.notes) DATA=parsed; }
+catch(e){ console.warn("pmNotes: 内嵌标注数据解析失败",e); }
+var OV_SEL=DATA.overlaySelector||".modal-overlay.show";
+var usedLocal=false;
+try{
+  var raw=localStorage.getItem(LS_KEY);
+  if(raw){ var st=JSON.parse(raw);
+    if(st&&st.notes&&st.updatedAt&&(!DATA.updatedAt||st.updatedAt>DATA.updatedAt)){ DATA=st; usedLocal=true; } }
+}catch(e){}
+var notes=DATA.notes||[];
+
+/* ---------- 运行时状态 ---------- */
+var visible=true,editMode=false,adding=false,dirty=usedLocal;
+var pinnedId=null,hoverId=null,tipHover=false,lastTipId=null;
+var editingId=null,editingIsNew=false,dragState=null;
+
+/* ---------- 构建 UI ---------- */
+var root=document.createElement("div");
+root.className="pm-root";
+root.innerHTML=
+'<div class="pm-tip" id="pmTip">'+
+' <div class="pm-tip-h"><span class="pm-no" id="pmTipNo"></span><span id="pmTipTitle"></span></div>'+
+' <div class="pm-tip-b" id="pmTipBody"></div>'+
+' <div class="pm-tip-f" id="pmTipFoot"></div>'+
+'</div>'+
+'<div class="pm-hl" id="pmHl"></div>'+
+'<div class="pm-pick" id="pmPick"><div class="pm-pick-tip">点击要标注的元素，放置一个蓝色泡泡 · 滚轮可滚动页面 · Esc 取消</div></div>'+
+'<div class="pm-ed" id="pmEd">'+
+' <div class="pm-ed-h"><span id="pmEdCap">编辑标注</span><span class="pm-ed-x" id="pmEdX">✕</span></div>'+
+' <div class="pm-ed-b">'+
+'  <label class="pm-ed-lab">标题</label>'+
+'  <input type="text" id="pmEdTitle" maxlength="60" placeholder="例如：搜索规则 / 提交校验清单">'+
+'  <label class="pm-ed-lab">说明内容（写给后端，支持换行）</label>'+
+'  <textarea id="pmEdBody" rows="10" placeholder="【类型】【枚举值】【默认值】【必录】【规则说明】【逻辑说明】1、…"></textarea>'+
+'  <div class="pm-ed-meta">锚点元素：<code id="pmEdAnchor"></code></div>'+
+'  <div class="pm-ed-note">提示：开启「✎ 编辑」后可直接拖动泡泡微调位置；内容保存后记得点「⬇ 保存 HTML」写入文件。</div>'+
+' </div>'+
+' <div class="pm-ed-f">'+
+'  <button class="pm-ed-btn pm-danger" id="pmEdDel">删除</button><span style="flex:1"></span>'+
+'  <button class="pm-ed-btn" id="pmEdCancel">取消</button>'+
+'  <button class="pm-ed-btn pm-primary" id="pmEdSave">保存</button>'+
+' </div>'+
+'</div>'+
+'<div class="pm-bar" id="pmBar">'+
+' <span class="pm-cap">后端标注 <b id="pmCount">0</b></span>'+
+' <span class="pm-btn" id="pmBtnVis" title="显示 / 隐藏全部泡泡">隐藏</span>'+
+' <span class="pm-btn" id="pmBtnAdd" title="在页面上点选一个元素，添加标注泡泡">＋ 添加</span>'+
+' <span class="pm-btn" id="pmBtnEdit" title="编辑模式：点击泡泡改内容，拖动调位置">✎ 编辑</span>'+
+' <span class="pm-btn" id="pmBtnReset" title="放弃浏览器暂存的修改，恢复为文件内保存的标注">↺</span>'+
+' <span class="pm-btn" id="pmBtnSave" title="把当前全部标注写入 HTML 并下载，用它替换原文件即完成保存">⬇ 保存 HTML</span>'+
+'</div>';
+document.body.appendChild(root);
+
+function q(s){return root.querySelector(s);}
+var tip=q("#pmTip"),tipNo=q("#pmTipNo"),tipTitle=q("#pmTipTitle"),tipBody=q("#pmTipBody"),tipFoot=q("#pmTipFoot");
+var hl=q("#pmHl"),pick=q("#pmPick"),ed=q("#pmEd");
+var btnVis=q("#pmBtnVis"),btnAdd=q("#pmBtnAdd"),btnEdit=q("#pmBtnEdit"),btnReset=q("#pmBtnReset"),btnSave=q("#pmBtnSave");
+var edCap=q("#pmEdCap"),edTitle=q("#pmEdTitle"),edBody=q("#pmEdBody"),edAnchor=q("#pmEdAnchor");
+
+var toastEl=document.createElement("div");
+toastEl.className="pm-toast";
+root.appendChild(toastEl);
+var toastTimer=null;
+function toastMsg(m){
+  toastEl.textContent=m; toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){toastEl.classList.remove("show");},2400);
+}
+if(usedLocal) setTimeout(function(){toastMsg("已载入浏览器暂存的标注修改（尚未写入文件）");},700);
+
+/* ---------- 泡泡元素管理 ---------- */
+var dotEls={};
+function noteIndex(id){ for(var i=0;i<notes.length;i++) if(notes[i].id===id) return i; return -1; }
+function noteById(id){ var i=noteIndex(id); return i<0?null:notes[i]; }
+
+function syncDots(){
+  Object.keys(dotEls).forEach(function(id){
+    if(noteIndex(id)<0){ dotEls[id].remove(); delete dotEls[id]; }
+  });
+  notes.forEach(function(n,i){
+    var el=dotEls[n.id];
+    if(!el){
+      el=document.createElement("div");
+      el.className="pm-dot"; el.dataset.pmId=n.id;
+      bindDot(el);
+      root.insertBefore(el,tip);
+      dotEls[n.id]=el;
+    }
+    el.textContent=i+1;
+    el.classList.toggle("pm-pinned",pinnedId===n.id);
+  });
+  q("#pmCount").textContent=notes.length;
+}
+
+function bindDot(el){
+  el.addEventListener("mouseenter",function(){ hoverId=el.dataset.pmId; });
+  el.addEventListener("mouseleave",function(){ if(hoverId===el.dataset.pmId) hoverId=null; });
+  el.addEventListener("pointerdown",function(e){
+    e.preventDefault(); e.stopPropagation();
+    dragState={id:el.dataset.pmId,sx:e.clientX,sy:e.clientY,x:null,y:null,moved:false};
+    if(editMode){ try{el.setPointerCapture(e.pointerId);}catch(err){} }
+  });
+  el.addEventListener("pointermove",function(e){
+    if(!dragState||dragState.id!==el.dataset.pmId||!editMode) return;
+    if(Math.abs(e.clientX-dragState.sx)+Math.abs(e.clientY-dragState.sy)>4) dragState.moved=true;
+    if(dragState.moved){ dragState.x=e.clientX; dragState.y=e.clientY; }
+  });
+  el.addEventListener("pointerup",function(e){
+    var id=el.dataset.pmId;
+    if(!dragState||dragState.id!==id){ dragState=null; return; }
+    var moved=dragState.moved,x=dragState.x,y=dragState.y;
+    dragState=null;
+    if(editMode){
+      if(moved) commitDrag(noteById(id),x,y);
+      else openEditor(id,false);
+    }else{
+      pinnedId=(pinnedId===id?null:id);
+      syncDots();
+    }
+  });
+}
+
+function commitDrag(n,x,y){
+  if(!n||x==null) return;
+  var a=null; try{a=document.querySelector(n.anchor);}catch(e){}
+  if(!a) return;
+  var r=a.getBoundingClientRect();
+  n.fx=r.width?Math.round((x-r.left)/r.width*1000)/1000:0;
+  n.fy=r.height?Math.round((y-r.top)/r.height*1000)/1000:0;
+  n.ox=0; n.oy=0;
+  persist();
+}
+
+/* ---------- 每帧定位 ---------- */
+var clipCache=new WeakMap();
+function clipChain(el){
+  var c=clipCache.get(el); if(c) return c;
+  c=[]; var p=el.parentElement;
+  while(p&&p!==document.documentElement){
+    var s=getComputedStyle(p);
+    if(s.overflowY!=="visible"||s.overflowX!=="visible") c.push(p);
+    p=p.parentElement;
+  }
+  clipCache.set(el,c); return c;
+}
+
+function frame(){
+  var shownOv=null;
+  try{ shownOv=document.querySelector(OV_SEL); }catch(e){}
+  notes.forEach(function(n){
+    var el=dotEls[n.id]; if(!el) return;
+    var show=false,x=0,y=0,a=null;
+    try{a=document.querySelector(n.anchor);}catch(e){}
+    if(visible&&a){
+      var r=a.getBoundingClientRect();
+      if(r.width>0||r.height>0){
+        x=r.left+r.width*(n.fx||0)+(n.ox||0);
+        y=r.top+r.height*(n.fy||0)+(n.oy||0);
+        show=true;
+        if(shownOv&&!shownOv.contains(a)) show=false;
+        if(show){
+          var chain=clipChain(a);
+          for(var i=0;i<chain.length;i++){
+            var cr=chain[i].getBoundingClientRect();
+            if(x<cr.left-2||x>cr.right+2||y<cr.top-2||y>cr.bottom+2){show=false;break;}
+          }
+        }
+        if(show&&(x<-4||x>innerWidth+4||y<4||y>innerHeight+4)) show=false;
+      }
+    }
+    if(dragState&&dragState.id===n.id&&dragState.x!=null){ x=dragState.x; y=dragState.y; show=true; }
+    n._x=x; n._y=y; n._vis=show;
+    el.style.display=show?"block":"none";
+    if(show){ el.style.left=x+"px"; el.style.top=y+"px"; }
+  });
+  updateTip();
+  requestAnimationFrame(frame);
+}
+
+/* ---------- 悬浮说明 ---------- */
+function tipTargetId(){
+  if(adding||editingId||dragState) return null;
+  if(hoverId) return hoverId;
+  if(tipHover&&lastTipId) return lastTipId;
+  return pinnedId;
+}
+function fillTip(n){
+  var i=noteIndex(n.id);
+  tipNo.textContent="#"+(i+1);
+  tipTitle.textContent=n.title||"备注";
+  tipBody.textContent=n.body||"（暂无内容）";
+  tipFoot.textContent=editMode?"编辑模式 · 点击泡泡修改内容，拖动调整位置":"后端交底备注 · 点击泡泡可固定 / 取消固定";
+}
+function placeTip(n){
+  var w=tip.offsetWidth,h=tip.offsetHeight,m=10,x=n._x+16,y=n._y-h/2;
+  if(x+w>innerWidth-m) x=n._x-16-w;
+  if(x<m) x=m;
+  y=Math.max(m,Math.min(innerHeight-h-m,y));
+  tip.style.left=x+"px"; tip.style.top=y+"px";
+}
+function updateTip(){
+  if(pinnedId){ var pn=noteById(pinnedId); if(!pn||!pn._vis){ pinnedId=null; syncDots(); } }
+  var id=tipTargetId(); var n=id?noteById(id):null;
+  if(n&&n._vis){
+    if(lastTipId!==id){ fillTip(n); lastTipId=id; }
+    tip.classList.add("show");
+    placeTip(n);
+  }else{
+    tip.classList.remove("show");
+  }
+}
+tip.addEventListener("mouseenter",function(){tipHover=true;});
+tip.addEventListener("mouseleave",function(){tipHover=false;});
+document.addEventListener("pointerdown",function(e){
+  if(pinnedId&&!(e.target.closest&&e.target.closest(".pm-root"))){ pinnedId=null; syncDots(); }
+});
+
+/* ---------- 选择器生成 ---------- */
+function cssPath(el){
+  if(el.id) return "#"+CSS.escape(el.id);
+  var seg=[],cur=el,IGN=["show","is-active","active","has","open","hide","invalid","over","cur"];
+  while(cur&&cur.nodeType===1&&cur!==document.body){
+    if(cur.id){ seg.unshift("#"+CSS.escape(cur.id)); break; }
+    var s=cur.tagName.toLowerCase();
+    var cls=[].slice.call(cur.classList).filter(function(c){return IGN.indexOf(c)<0;}).slice(0,2);
+    if(cls.length) s+="."+cls.map(function(c){return CSS.escape(c);}).join(".");
+    var par=cur.parentElement;
+    if(par){
+      var same=[].slice.call(par.children).filter(function(ch){try{return ch.matches(s);}catch(e){return false;}});
+      if(same.length>1) s+=":nth-child("+([].slice.call(par.children).indexOf(cur)+1)+")";
+    }
+    seg.unshift(s); cur=par;
+  }
+  var sel=seg.join(" > ");
+  try{ if(document.querySelector(sel)===el) return sel; }catch(e){}
+  seg=[]; cur=el;
+  while(cur&&cur!==document.body&&cur.nodeType===1){
+    var p2=cur.parentElement; if(!p2) break;
+    seg.unshift(cur.tagName.toLowerCase()+":nth-child("+([].slice.call(p2.children).indexOf(cur)+1)+")");
+    cur=p2;
+  }
+  return "body > "+seg.join(" > ");
+}
+
+/* ---------- 添加标注 ---------- */
+function startAdd(){
+  if(editingId) closeEditor();
+  adding=true; visible=true; pinnedId=null;
+  root.classList.add("pm-adding");
+  pick.style.display="block"; btnAdd.classList.add("on"); refreshBar();
+}
+function stopAdd(){
+  adding=false; root.classList.remove("pm-adding");
+  pick.style.display="none"; hl.style.display="none";
+  btnAdd.classList.remove("on");
+}
+function pickTarget(x,y){
+  var stack=document.elementsFromPoint(x,y).filter(function(el){return !(el.closest&&el.closest(".pm-root"));});
+  var t=stack[0];
+  if(!t||t===document.documentElement) t=document.body;
+  return t;
+}
+pick.addEventListener("mousemove",function(e){
+  var t=pickTarget(e.clientX,e.clientY);
+  if(!t||t===document.body){ hl.style.display="none"; return; }
+  var r=t.getBoundingClientRect();
+  hl.style.display="block";
+  hl.style.left=r.left-2+"px"; hl.style.top=r.top-2+"px";
+  hl.style.width=r.width+"px"; hl.style.height=r.height+"px";
+});
+pick.addEventListener("click",function(e){
+  e.preventDefault(); e.stopPropagation();
+  var t=pickTarget(e.clientX,e.clientY);
+  var sel=cssPath(t),r=t.getBoundingClientRect();
+  var n={id:"n"+Date.now().toString(36),anchor:sel,
+    fx:r.width?Math.round((e.clientX-r.left)/r.width*1000)/1000:0.5,
+    fy:r.height?Math.round((e.clientY-r.top)/r.height*1000)/1000:0.5,
+    ox:0,oy:0,title:"",body:""};
+  notes.push(n);
+  stopAdd(); syncDots(); persist();
+  openEditor(n.id,true);
+});
+pick.addEventListener("wheel",function(e){
+  e.preventDefault();
+  var stack=document.elementsFromPoint(e.clientX,e.clientY).filter(function(el){return !(el.closest&&el.closest(".pm-root"));});
+  for(var i=0;i<stack.length;i++){
+    var c=stack[i];
+    while(c&&c!==document.body){
+      if(c.scrollHeight>c.clientHeight+4){
+        var s=getComputedStyle(c);
+        if(/(auto|scroll)/.test(s.overflowY)){ c.scrollTop+=e.deltaY; return; }
+      }
+      c=c.parentElement;
+    }
+  }
+},{passive:false});
+
+/* ---------- 编辑器 ---------- */
+var delArmed=false;
+function openEditor(id,isNew){
+  var n=noteById(id); if(!n) return;
+  editingId=id; editingIsNew=!!isNew; delArmed=false;
+  edCap.textContent=(isNew?"新增标注 #":"编辑标注 #")+(noteIndex(id)+1);
+  edTitle.value=n.title||""; edBody.value=n.body||"";
+  edAnchor.textContent=n.anchor;
+  q("#pmEdDel").textContent="删除";
+  ed.classList.add("show");
+  setTimeout(function(){ (isNew?edTitle:edBody).focus(); },60);
+}
+function closeEditor(){
+  if(editingIsNew&&editingId){
+    var n=noteById(editingId);
+    if(n&&!edTitle.value.trim()&&!edBody.value.trim()){
+      notes.splice(noteIndex(editingId),1); syncDots(); persist();
+    }
+  }
+  editingId=null; editingIsNew=false;
+  ed.classList.remove("show");
+}
+q("#pmEdSave").addEventListener("click",function(){
+  var n=noteById(editingId); if(!n){ closeEditor(); return; }
+  n.title=edTitle.value.trim(); n.body=edBody.value;
+  editingIsNew=false;
+  persist(); syncDots(); lastTipId=null;
+  closeEditor();
+  toastMsg("标注已保存（浏览器暂存）· 点「⬇ 保存 HTML」写入文件");
+});
+q("#pmEdCancel").addEventListener("click",closeEditor);
+q("#pmEdX").addEventListener("click",closeEditor);
+q("#pmEdDel").addEventListener("click",function(){
+  if(!delArmed){ delArmed=true; this.textContent="再点一次确认删除"; return; }
+  var i=noteIndex(editingId);
+  if(i>=0){ notes.splice(i,1); }
+  editingIsNew=false;
+  closeEditor(); syncDots(); persist();
+  toastMsg("标注已删除");
+});
+
+/* ---------- 工具条 ---------- */
+function refreshBar(){
+  btnVis.textContent=visible?"隐藏":"显示";
+  btnVis.classList.toggle("on",!visible);
+  btnEdit.classList.toggle("on",editMode);
+  btnSave.classList.toggle("pm-dirty",dirty);
+}
+btnVis.addEventListener("click",function(){
+  visible=!visible;
+  if(!visible){ pinnedId=null; if(adding)stopAdd(); if(editingId)closeEditor(); }
+  refreshBar();
+});
+btnAdd.addEventListener("click",function(){ adding?stopAdd():startAdd(); });
+btnEdit.addEventListener("click",function(){
+  editMode=!editMode; visible=true; pinnedId=null; lastTipId=null;
+  if(adding) stopAdd();
+  if(!editMode&&editingId) closeEditor();
+  root.classList.toggle("pm-editmode",editMode);
+  refreshBar(); syncDots();
+  toastMsg(editMode?"编辑模式：点击泡泡改内容，拖动调位置":"已退出编辑模式");
+});
+var resetArmed=false,resetTimer=null;
+btnReset.addEventListener("click",function(){
+  if(!resetArmed){
+    resetArmed=true; btnReset.textContent="确认恢复?";
+    resetTimer=setTimeout(function(){resetArmed=false;btnReset.textContent="↺";},3000);
+    return;
+  }
+  clearTimeout(resetTimer);
+  try{localStorage.removeItem(LS_KEY);}catch(e){}
+  location.reload();
+});
+btnSave.addEventListener("click",exportHtml);
+
+/* ---------- 持久化 ---------- */
+function currentJson(){
+  var clean=notes.map(function(n){
+    return {id:n.id,anchor:n.anchor,fx:n.fx,fy:n.fy,ox:n.ox||0,oy:n.oy||0,title:n.title||"",body:n.body||""};
+  });
+  return {v:1,updatedAt:new Date().toISOString(),overlaySelector:OV_SEL,notes:clean};
+}
+function persist(){
+  DATA=currentJson();
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(DATA)); }catch(e){}
+  dirty=true; refreshBar();
+}
+window.__pmNotesData=function(){ return JSON.stringify(currentJson(),null,1); };
+
+/* ---------- 导出：把标注写回 HTML 并下载 ---------- */
+/* 预览环境可能向页面注入辅助属性/脚本，导出前清洗干净，保证下载的就是纯净原型文件 */
+function sanitize(rootEl){
+  var bad=rootEl.querySelectorAll('[data-omelette-injected], script[id^="__om"]');
+  for(var i=0;i<bad.length;i++) bad[i].remove();
+  var strip=function(el){
+    var names=[],j;
+    for(j=0;j<el.attributes.length;j++){
+      var nm=el.attributes[j].name;
+      if(nm.indexOf("data-om-")===0||nm==="data-src-ver"||nm==="data-omelette-injected") names.push(nm);
+    }
+    for(j=0;j<names.length;j++) el.removeAttribute(names[j]);
+  };
+  strip(rootEl);
+  var all=rootEl.querySelectorAll("*");
+  for(i=0;i<all.length;i++) strip(all[i]);
+}
+function finishDoc(rootEl,json){
+  var d=rootEl.querySelector("#pmNoteData");
+  if(!d){
+    d=(rootEl.ownerDocument||document).createElement("script");
+    d.type="application/json"; d.id="pmNoteData";
+    var eng=rootEl.querySelector("#pmNoteEngine");
+    if(eng&&eng.parentNode) eng.parentNode.insertBefore(d,eng);
+    else{ var bd=rootEl.querySelector("body"); if(bd) bd.appendChild(d); else return null; }
+  }
+  var rm=rootEl.querySelectorAll(".pm-root");
+  for(var i=0;i<rm.length;i++) rm[i].remove();
+  sanitize(rootEl);
+  d.textContent="\n"+json+"\n";
+  return "<!DOCTYPE html>\n"+rootEl.outerHTML;
+}
+function buildFromSrc(src,json){
+  try{
+    var doc=new DOMParser().parseFromString(src,"text/html");
+    return finishDoc(doc.documentElement,json);
+  }catch(e){ return null; }
+}
+function cloneExport(json){
+  try{
+    var r=document.documentElement.cloneNode(true);
+    return finishDoc(r,json);
+  }catch(e){ return null; }
+}
+function exportHtml(){
+  var json=JSON.stringify(currentJson(),null,1).replace(/<\//g,"<\\/");
+  var done=function(out){
+    if(!out){ toastMsg("导出失败：无法获取页面源码"); return; }
+    var blob=new Blob([out],{type:"text/html;charset=utf-8"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download=FILE_NAME;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+    dirty=false; refreshBar();
+    toastMsg("已导出含最新标注的 HTML，用它替换原文件即完成保存");
+  };
+  fetch(location.href.split("#")[0],{cache:"no-store"})
+    .then(function(res){ return res.ok?res.text():null; })
+    .catch(function(){ return null; })
+    .then(function(src){
+      var out=src?buildFromSrc(src,json):null;
+      done(out||cloneExport(json));
+    });
+}
+
+/* ---------- 快捷键 ---------- */
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Escape") return;
+  if(adding){ stopAdd(); e.stopImmediatePropagation(); return; }
+  if(editingId){ closeEditor(); e.stopImmediatePropagation(); return; }
+  if(pinnedId){ pinnedId=null; syncDots(); e.stopImmediatePropagation(); }
+},true);
+
+/* ---------- 启动 ---------- */
+syncDots(); refreshBar();
+requestAnimationFrame(frame);
+})();
+</script>
+
+
+<script src="../prototype-routes.js"></script>
+<script src="../prototype-nav.js"></script>
+</body></html>

@@ -1,0 +1,10 @@
+{
+  "name": "ebc-agent-studio-prototype",
+  "private": true,
+  "version": "0.2.0",
+  "description": "EBC Agent Studio unified interactive prototype",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}

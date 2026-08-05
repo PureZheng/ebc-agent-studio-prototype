@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EBC Agent Studio · Skill 技能</title>
+<style>
+  :root{
+    --navy:#16233b;--navy-2:#1d2f4d;
+    --primary:#2563c9;--primary-d:#1c4ea3;--primary-bg:#eef3fb;
+    --bg:#f3f5f9;--paper:#ffffff;
+    --ink:#1c2733;--sub:#5b6573;--mute:#9099a6;
+    --line:#e6eaf0;--line-2:#eef1f6;
+    --gold:#c98a1e;--gold-bg:#fdf6e8;--gold-bd:#f0dcae;--gold-strong:#e9c25f;
+    --green:#2e9d6e;--green-bg:#e9f6f0;--green-bd:#c7e8d8;
+    --amber:#c8842a;--amber-bg:#fbf2e6;--amber-bd:#f0dcae;
+    --purple:#7a52c4;--purple-bg:#f1ecfa;--purple-bd:#ddd0f2;
+    --red:#d0584f;--red-bg:#fbeceb;
+    --gray-bg:#f6f8fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  a{text-decoration:none;color:inherit}
+  svg{width:20px;height:20px;display:block}
+  .app{display:flex;height:100vh;overflow:hidden}
+
+  /* ============ 侧边栏 ============ */
+  .sidebar{width:248px;flex:0 0 248px;background:var(--navy);color:#cfd8e6;
+    display:flex;flex-direction:column;height:100vh}
+  .logo{display:flex;align-items:center;gap:11px;padding:18px 18px 16px}
+  .logo .mark{width:38px;height:38px;border-radius:9px;flex:0 0 auto;
+    background:linear-gradient(135deg,#3a72d4,#2450a8);display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#fff;font-size:15px;letter-spacing:.5px;box-shadow:0 3px 8px rgba(36,80,168,.4)}
+  .logo .tt{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px}
+  .logo .ss{font-size:10.5px;color:#7d8aa0;margin-top:2px;letter-spacing:1px}
+
+  .nav{flex:1;overflow-y:auto;padding:4px 12px 14px}
+  .nav::-webkit-scrollbar{width:6px}
+  .nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+  .nav-cap{font-size:11px;color:#67738c;padding:13px 12px 7px;letter-spacing:1px}
+
+  .nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+    font-size:13.5px;color:#bcc7d8;cursor:pointer;margin-bottom:2px;transition:.15s}
+  .nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav-item.is-active{background:linear-gradient(90deg,var(--primary),#2c6fd6);color:#fff;
+    box-shadow:0 3px 10px rgba(37,99,201,.35)}
+  .nav-item .ico{opacity:.92;flex:0 0 auto}
+
+  .nav-group{margin-bottom:2px}
+  .ng-head{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+    font-size:13.5px;color:#bcc7d8;cursor:pointer;transition:.15s;user-select:none}
+  .ng-head:hover{background:rgba(255,255,255,.06);color:#fff}
+  .ng-head .ico{opacity:.92;flex:0 0 auto}
+  .ng-head .chev{margin-left:auto;transition:transform .2s;flex:0 0 auto}
+  .ng-head .chev svg{width:15px;height:15px}
+  .nav-group.open .ng-head{color:#fff}
+  .nav-group.open .ng-head .chev{transform:rotate(90deg)}
+  .ng-sub{max-height:0;overflow:hidden;transition:max-height .26s ease}
+  .nav-group.open .ng-sub{max-height:320px}
+  .ng-sub-item{display:flex;align-items:center;gap:8px;padding:8px 12px 8px 40px;border-radius:7px;
+    font-size:13px;color:#9aa7bd;cursor:pointer;margin:2px 0;transition:.15s;position:relative}
+  .ng-sub-item:hover{background:rgba(255,255,255,.05);color:#fff}
+  .ng-sub-item.is-active{background:rgba(37,99,201,.18);color:#fff}
+  .ng-sub-item.is-active::before{content:"";position:absolute;left:24px;top:50%;transform:translateY(-50%);
+    width:5px;height:5px;border-radius:50%;background:var(--primary)}
+  .mvp{margin-left:auto;font-size:9px;font-weight:800;color:#3a2c08;
+    background:var(--gold-strong);border-radius:4px;padding:1px 5px;letter-spacing:.5px;flex:0 0 auto}
+
+  .side-foot{border-top:1px solid rgba(255,255,255,.08);padding:12px;display:flex;align-items:center;gap:10px}
+  .avatar{width:34px;height:34px;border-radius:50%;flex:0 0 auto;background:linear-gradient(135deg,#4d7fd6,#2f5aa8);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+  .side-foot .nm{font-size:13px;color:#e7ecf4;font-weight:600}
+  .side-foot .rl{font-size:10.5px;color:#7d8aa0;margin-top:1px}
+  .side-foot .who{flex:1;min-width:0}
+  .side-foot .gear{color:#7d8aa0;cursor:pointer}.side-foot .gear:hover{color:#fff}
+
+  /* ============ 主区域 ============ */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  .topbar{height:58px;flex:0 0 58px;background:var(--paper);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:14px;padding:0 22px}
+  .crumb{font-size:15px;font-weight:700}
+  .crumb span{font-size:12px;color:var(--mute);font-weight:400;margin-left:9px}
+  .top-acts{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .gbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);
+    border-radius:8px;padding:8px 13px;font-size:13px;color:var(--sub);cursor:pointer;font-weight:500}
+  .gbtn:hover{background:var(--gray-bg);color:var(--primary);border-color:var(--primary-bg)}
+  .gbtn svg{width:15px;height:15px}
+
+  /* ===== Tab 子页面导航 ===== */
+  .tabbar{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:0 22px;
+    display:flex;align-items:center;gap:4px}
+  .tab{display:flex;align-items:center;gap:8px;padding:14px 16px;font-size:14px;color:var(--sub);
+    cursor:pointer;font-weight:600;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:.15s}
+  .tab:hover{color:var(--primary)}
+  .tab.active{color:var(--primary-d);border-bottom-color:var(--primary)}
+  .tab .tcount{font-size:11px;font-weight:700;background:var(--gray-bg);color:var(--mute);
+    border-radius:20px;padding:1px 8px;min-width:22px;text-align:center}
+  .tab.active .tcount{background:var(--primary-bg);color:var(--primary-d)}
+  .tab .tic{font-size:15px}
+
+  /* ===== 工具条：搜索 + 新建 ===== */
+  .toolbar{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);
+    padding:13px 22px;display:flex;align-items:center;gap:12px}
+  .search{position:relative;flex:1;max-width:420px}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--mute)}
+  .search input{width:100%;border:1px solid var(--line);border-radius:9px;background:var(--gray-bg);
+    padding:9px 12px 9px 38px;font-size:13.5px;font-family:inherit;color:var(--ink);outline:none;transition:.15s}
+  .search input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px var(--primary-bg)}
+  .search input::placeholder{color:var(--mute)}
+  .search .clr{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;
+    border-radius:50%;background:var(--line);color:var(--sub);display:none;align-items:center;justify-content:center;
+    cursor:pointer;font-size:12px}
+  .search.has .clr{display:flex}
+  .tb-hint{font-size:12px;color:var(--mute);display:flex;align-items:center;gap:6px}
+  .tb-spacer{flex:1}
+  .new-btn{display:flex;align-items:center;gap:7px;background:var(--primary);color:#fff;border:none;
+    border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;
+    box-shadow:0 3px 9px rgba(37,99,201,.3)}
+  .new-btn:hover{background:var(--primary-d)}
+  .new-btn svg{width:16px;height:16px}
+  .new-btn.hide{display:none}
+
+  /* ===== 内容区：卡片网格 ===== */
+  .page{flex:1;overflow-y:auto;padding:20px 22px 40px}
+  .page-banner{font-size:12.5px;color:var(--sub);background:var(--gray-bg);border:1px solid var(--line);
+    border-radius:9px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:9px;line-height:1.5}
+  .page-banner .bicon{font-size:16px}
+  .page-banner b{color:var(--ink)}
+
+  .skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:15px}
+
+  .skill-card{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:16px;
+    display:flex;flex-direction:column;transition:.16s;position:relative;cursor:default}
+  .skill-card:hover{border-color:#cdd9ec;box-shadow:0 8px 22px rgba(20,35,60,.08);transform:translateY(-2px)}
+  .sc-top{display:flex;align-items:flex-start;gap:11px}
+  .sc-ic{width:42px;height:42px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    font-size:20px;background:var(--gray-bg)}
+  .sc-ic.builtin{background:#e9f0fc}.sc-ic.shared{background:var(--green-bg)}.sc-ic.custom{background:var(--gold-bg)}
+  .sc-head{flex:1;min-width:0}
+  .sc-name{font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ver-badge{font-size:11px;font-weight:700;border-radius:5px;padding:1px 7px;letter-spacing:.3px}
+  .ver-badge.builtin{background:var(--primary-bg);color:var(--primary-d)}
+  .ver-badge.shared{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+  .ver-badge.custom{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-bd)}
+  .sc-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .sc-tag{font-size:10.5px;font-weight:600;border-radius:5px;padding:1px 7px}
+  .sc-tag.builtin{background:#eef3fb;color:var(--primary-d)}
+  .sc-tag.shared{background:var(--green-bg);color:var(--green)}
+  .sc-tag.custom{background:var(--gold-bg);color:var(--gold)}
+
+  .sc-id{display:flex;align-items:center;gap:7px;margin:13px 0 9px;background:var(--gray-bg);
+    border:1px solid var(--line-2);border-radius:7px;padding:7px 10px}
+  .sc-id .idlab{font-size:10.5px;color:var(--mute);font-weight:600;flex:0 0 auto}
+  .sc-id .idval{font-size:11.5px;color:var(--sub);font-family:"SF Mono",Consolas,Menlo,monospace;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+  .sc-id .idcopy{flex:0 0 auto;width:22px;height:22px;border-radius:5px;border:1px solid var(--line);
+    background:#fff;color:var(--mute);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .sc-id .idcopy:hover{color:var(--primary);border-color:var(--primary-bg)}
+  .sc-id .idcopy svg{width:13px;height:13px}
+
+  .sc-desc{font-size:12.5px;color:var(--sub);line-height:1.6;margin-bottom:12px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+  .sc-foot{margin-top:auto;display:flex;align-items:center;gap:8px;padding-top:11px;border-top:1px solid var(--line-2)}
+  .sc-meta{font-size:11.5px;color:var(--mute);display:flex;align-items:center;gap:5px}
+  .sc-ver-link{font-size:11.5px;color:var(--primary);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px}
+  .sc-ver-link:hover{text-decoration:underline}
+  .sc-ver-link svg{width:13px;height:13px}
+  .sc-foot .sp{flex:1}
+  .sc-btn{display:flex;align-items:center;gap:5px;border:1px solid var(--line);background:#fff;
+    border-radius:7px;padding:5px 11px;font-size:12px;color:var(--sub);cursor:pointer;font-weight:600}
+  .sc-btn:hover{border-color:var(--primary-bg);color:var(--primary);background:var(--gray-bg)}
+  .sc-btn svg{width:13px;height:13px}
+  .sc-btn.edit{border-color:var(--gold-bd);color:var(--gold);background:var(--gold-bg)}
+  .sc-btn.edit:hover{background:#faedd0}
+
+  /* 新建卡（自定义页首张） */
+  .create-card{border:1.6px dashed #c2cee0;background:var(--gray-bg);border-radius:13px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    cursor:pointer;min-height:210px;color:var(--primary-d);transition:.16s;text-align:center;padding:16px}
+  .create-card:hover{border-color:var(--primary);background:#fff;box-shadow:0 8px 22px rgba(20,35,60,.08)}
+  .create-card .plus{width:48px;height:48px;border-radius:50%;background:var(--primary-bg);
+    display:flex;align-items:center;justify-content:center}
+  .create-card .plus svg{width:26px;height:26px;color:var(--primary)}
+  .create-card .ct{font-size:14.5px;font-weight:700}
+  .create-card .cs{font-size:12px;color:var(--mute);font-weight:400}
+
+  .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mute)}
+  .empty .ei{font-size:42px;margin-bottom:12px}
+  .empty .et{font-size:14px;font-weight:600;color:var(--sub)}
+  .empty .es{font-size:12.5px;margin-top:5px}
+
+  /* ===== 弹窗 ===== */
+  .modal-overlay{position:fixed;inset:0;background:rgba(18,28,45,.5);backdrop-filter:blur(2px);
+    display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+  .modal-overlay.show{display:flex}
+  .modal{background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(15,25,45,.3);
+    width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;
+    animation:pop .2s ease}
+  .modal.wide{max-width:620px}
+  @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+  .modal-head{display:flex;align-items:center;gap:11px;padding:18px 22px;border-bottom:1px solid var(--line)}
+  .modal-head .mh-ic{width:38px;height:38px;border-radius:10px;background:var(--primary-bg);
+    display:flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
+  .modal-head .mh-tt{font-size:16px;font-weight:700}
+  .modal-head .mh-ss{font-size:12px;color:var(--mute);margin-top:2px}
+  .modal-head .mh-x{margin-left:auto;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);
+    background:#fff;color:var(--mute);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
+  .modal-head .mh-x:hover{background:var(--gray-bg);color:var(--ink)}
+  .modal-head .mh-x svg{width:17px;height:17px}
+  .modal-body{padding:20px 22px;overflow-y:auto}
+  .modal-foot{display:flex;align-items:center;gap:10px;padding:15px 22px;border-top:1px solid var(--line);background:var(--gray-bg)}
+  .modal-foot .sp{flex:1}
+  .mbtn{border-radius:9px;padding:9px 20px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--line);
+    background:#fff;color:var(--sub)}
+  .mbtn:hover{background:#fff;border-color:#cdd9ec}
+  .mbtn.primary{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 3px 9px rgba(37,99,201,.3)}
+  .mbtn.primary:hover{background:var(--primary-d)}
+
+  /* 新建方式选择 */
+  .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .choice-card{border:1.6px solid var(--line);border-radius:13px;padding:20px 18px;cursor:pointer;
+    transition:.16s;text-align:center;position:relative}
+  .choice-card:hover{border-color:var(--primary);background:var(--gray-bg);transform:translateY(-2px);
+    box-shadow:0 8px 22px rgba(20,35,60,.08)}
+  .choice-card .ci{width:52px;height:52px;border-radius:13px;margin:0 auto 12px;display:flex;align-items:center;
+    justify-content:center;font-size:26px}
+  .choice-card.imp .ci{background:var(--primary-bg)}
+  .choice-card.chat .ci{background:var(--purple-bg)}
+  .choice-card .cn{font-size:14.5px;font-weight:700;margin-bottom:5px}
+  .choice-card .cd{font-size:12px;color:var(--mute);line-height:1.55}
+  .choice-card .soon{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:800;color:var(--purple);
+    background:var(--purple-bg);border:1px solid var(--purple-bd);border-radius:5px;padding:1px 6px}
+
+  /* 表单 */
+  .ff{margin-bottom:17px}
+  .ff:last-child{margin-bottom:0}
+  .ff-lab{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+  .ff-lab .req{color:var(--red)}
+  .ff-lab .lock{font-size:10px;font-weight:600;color:var(--mute);background:var(--gray-bg);border:1px solid var(--line);
+    border-radius:4px;padding:1px 6px;margin-left:4px}
+  .ff-hint{font-size:11px;color:var(--mute);margin-left:auto;font-weight:400}
+  .ff input[type=text],.ff textarea{width:100%;border:1px solid var(--line);border-radius:9px;
+    padding:9px 12px;font-size:13.5px;font-family:inherit;color:var(--ink);outline:none;transition:.15s;background:#fff}
+  .ff input[type=text]:focus,.ff textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-bg)}
+  .ff input[disabled]{background:var(--gray-bg);color:var(--sub);cursor:not-allowed}
+  .ff input[readonly]{background:var(--gray-bg);color:var(--sub);cursor:default}
+  .ff textarea{resize:vertical;min-height:70px;line-height:1.6}
+  .ff input.mono{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:12.5px}
+  .char-count{font-size:11px;color:var(--mute);text-align:right;margin-top:4px}
+  .char-count.over{color:var(--red);font-weight:600}
+  .ff .err{font-size:11.5px;color:var(--red);margin-top:5px;display:none;align-items:center;gap:4px}
+  .ff.invalid input,.ff.invalid textarea{border-color:var(--red)}
+  .ff.invalid .err{display:flex}
+
+  /* 模板下载与上传区 */
+  .template-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid #d7e5f8;
+    background:#f6f9fe;border-radius:10px;padding:10px 12px;margin-bottom:16px}
+  .template-bar .tb-copy{min-width:0}
+  .template-bar .tb-title{font-size:12.5px;font-weight:700;color:var(--ink)}
+  .template-bar .tb-desc{font-size:11px;color:var(--mute);margin-top:2px}
+  .template-btn{display:flex;align-items:center;gap:6px;flex:0 0 auto;border:1px solid #b9cce8;background:#fff;color:var(--primary);
+    border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:default}
+  .template-btn svg{width:15px;height:15px}
+
+  .upload-zone{border:1.6px dashed #c2cee0;border-radius:11px;background:var(--gray-bg);padding:22px 16px;
+    text-align:center;cursor:pointer;transition:.15s}
+  .upload-zone:hover{border-color:var(--primary);background:#fff}
+  .upload-zone .ui{width:44px;height:44px;border-radius:50%;background:var(--primary-bg);margin:0 auto 10px;
+    display:flex;align-items:center;justify-content:center;color:var(--primary)}
+  .upload-zone .ui svg{width:22px;height:22px}
+  .upload-zone .ut{font-size:13px;font-weight:600;color:var(--ink)}
+  .upload-zone .ut b{color:var(--primary)}
+  .upload-zone .us{font-size:11.5px;color:var(--mute);margin-top:4px}
+  .upload-file{display:none;align-items:center;gap:10px;border:1px solid var(--green-bd);background:var(--green-bg);
+    border-radius:10px;padding:11px 13px;margin-top:2px}
+  .upload-file.show{display:flex}
+  .upload-file .fi{width:34px;height:34px;border-radius:8px;background:#fff;border:1px solid var(--green-bd);
+    display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+  .upload-file .fn{font-size:13px;font-weight:600;color:var(--ink)}
+  .upload-file .fs{font-size:11px;color:var(--green);margin-top:1px}
+  .upload-file .fx{margin-left:auto;color:var(--mute);cursor:pointer;width:26px;height:26px;border-radius:6px;
+    display:flex;align-items:center;justify-content:center}
+  .upload-file .fx:hover{background:#fff;color:var(--red)}
+
+  .form-row{display:flex;gap:14px}
+  .form-row .ff{flex:1}
+
+  .edit-note{font-size:12px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-bd);
+    border-radius:9px;padding:10px 13px;line-height:1.55;margin-bottom:17px;display:flex;gap:8px;align-items:flex-start}
+  .edit-note svg{width:16px;height:16px;flex:0 0 auto;margin-top:1px}
+
+  /* 版本历史 */
+  .vh-cur{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--primary-bg);
+    border:1px solid #cfe0f7;border-radius:11px;margin-bottom:16px}
+  .vh-cur .vc-ic{font-size:22px}
+  .vh-cur .vc-id{font-size:11px;color:var(--sub);font-family:"SF Mono",Consolas,monospace;
+    word-break:break-all;line-height:1.4;margin-top:3px}
+  .vh-list{position:relative;padding-left:22px}
+  .vh-list::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .vh-item{position:relative;padding:0 0 18px}
+  .vh-item:last-child{padding-bottom:0}
+  .vh-item::before{content:"";position:absolute;left:-19px;top:3px;width:11px;height:11px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--line)}
+  .vh-item.cur::before{border-color:var(--primary);background:var(--primary)}
+  .vh-top{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+  .vh-ver{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .vh-cur-tag{font-size:10px;font-weight:800;color:#fff;background:var(--primary);border-radius:5px;padding:1px 7px}
+  .vh-date{font-size:11.5px;color:var(--mute);margin-left:auto}
+  .vh-log{font-size:12.5px;color:var(--sub);line-height:1.55;background:var(--gray-bg);
+    border:1px solid var(--line-2);border-radius:8px;padding:8px 11px}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 20px;border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.25s;z-index:400;
+    display:flex;align-items:center;gap:8px}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast svg{width:16px;height:16px;color:var(--green-bd)}
+
+  @media(max-width:720px){.choice-grid{grid-template-columns:1fr}.form-row{flex-direction:column;gap:0}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ========== 侧边栏 ========== -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="mark">EBC</div>
+      <div>
+        <div class="tt">Agent Studio</div>
+        <div class="ss">AI 开发平台 · EBCAI版</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-cap">平台导航</div>
+      <div class="nav-item">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 01-1.2 4.3 8.5 8.5 0 01-7.3 4.2 8.4 8.4 0 01-4.3-1.2L3 20l1.2-5.2A8.4 8.4 0 013 10.5a8.5 8.5 0 014.2-7.3A8.4 8.4 0 0111.5 2h.5a8.5 8.5 0 018 8v.5z"/></svg></span>
+        对话测试
+      </div>
+
+      <div class="nav-cap">构建与能力</div>
+
+      <div class="nav-group">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="8" width="16" height="11" rx="2"/><path d="M12 8V4M8.5 13h.01M15.5 13h.01M2 13h2M20 13h2"/></svg></span>
+          Agent 开发中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">应用配置 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">应用发布 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">计划管理 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+
+      <div class="nav-group open">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.6 2.6-2-2 2.6-2.6z"/></svg></span>
+          能力与工具中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">MCP 接入 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">Tool 工具 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item is-active">Skill 技能 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4a1 1 0 011-1h13v15H6a2 2 0 00-2 2V5z"/><path d="M19 18H6a2 2 0 00-2 2"/></svg></span>
+          知识管理中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">知识库 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.6 3.6 3 8 3s8-1.4 8-3V5M4 11v6c0 1.6 3.6 3 8 3s8-1.4 8-3v-6"/></svg></span>
+          数据管理中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">结构化数据接入 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">非结构化数据接入 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="ng-head">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 15c-1 1-1.5 4-1.5 4s3-.5 4-1.5M14 4s4 0 6 2 2 6 2 6c-3 4-7 6-9 6l-3-3c0-2 2-6 4-9z"/><circle cx="14.5" cy="9.5" r="1.4"/></svg></span>
+          发布与集成中心
+          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+        </div>
+        <div class="ng-sub">
+          <div class="ng-sub-item">发布到业务端 <span class="mvp">MVP</span></div>
+          <div class="ng-sub-item">外部集成 <span class="mvp">MVP</span></div>
+        </div>
+      </div>
+
+      <div class="nav-cap">运营</div>
+      <div class="nav-item">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/></svg></span>
+        调试与评测中心
+      </div>
+      <div class="nav-item">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+        运营监控中心
+      </div>
+    </nav>
+
+    <div class="side-foot">
+      <div class="avatar">张</div>
+      <div class="who">
+        <div class="nm">张明</div>
+        <div class="rl">Agent 开发人员</div>
+      </div>
+      <span class="gear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.5 7.5 0 000-2l2-1.5-2-3.5-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.5L4.6 11a7.5 7.5 0 000 2l-2 1.5 2 3.5 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.5-2-1.5z"/></svg></span>
+    </div>
+  </aside>
+
+  <!-- ========== 主区域 ========== -->
+  <div class="main">
+
+    <header class="topbar">
+      <div class="crumb">Skill 技能<span>能力与工具中心 · 技能管理</span></div>
+      <div class="top-acts">
+        <div class="gbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>使用文档</div>
+      </div>
+    </header>
+
+    <!-- Tab 子页面 -->
+    <div class="tabbar" id="tabbar">
+      <div class="tab active" data-tab="builtin"><span class="tic">📦</span>内置 Skill <span class="tcount" id="cnt-builtin">0</span></div>
+      <div class="tab" data-tab="shared"><span class="tic">🏢</span>企业共享 Skill <span class="tcount" id="cnt-shared">0</span></div>
+      <div class="tab" data-tab="custom"><span class="tic">🛠️</span>自定义 Skill <span class="tcount" id="cnt-custom">0</span></div>
+    </div>
+
+    <!-- 工具条 -->
+    <div class="toolbar">
+      <div class="search" id="searchBox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="按名称或标识模糊搜索…">
+        <span class="clr" id="searchClr">✕</span>
+      </div>
+      <div class="tb-hint" id="tbHint"></div>
+      <div class="tb-spacer"></div>
+      <button class="new-btn hide" id="newBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>新建 Skill</button>
+    </div>
+
+    <!-- 内容 -->
+    <div class="page">
+      <div class="page-banner" id="banner"></div>
+      <div class="skill-grid" id="grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 弹窗：选择新建方式 ===== -->
+<div class="modal-overlay" id="modalChoice">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mh-ic">✨</div>
+      <div>
+        <div class="mh-tt">新建 Skill</div>
+        <div class="mh-ss">选择创建方式，快速接入一个新技能</div>
+      </div>
+      <div class="mh-x" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+    </div>
+    <div class="modal-body">
+      <div class="choice-grid">
+        <div class="choice-card imp" id="choiceImport">
+          <div class="ci">📥</div>
+          <div class="cn">手动导入</div>
+          <div class="cd">上传已打包的 Skill（.zip），填写标识、名称等信息后提交</div>
+        </div>
+        <div class="choice-card chat" id="choiceChat">
+          <span class="soon">即将上线</span>
+          <div class="ci">💬</div>
+          <div class="cn">对话新建</div>
+          <div class="cd">通过自然语言对话描述需求，由平台辅助生成 Skill</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 弹窗：手动导入 / 编辑 表单 ===== -->
+<div class="modal-overlay" id="modalForm">
+  <div class="modal wide">
+    <div class="modal-head">
+      <div class="mh-ic" id="formIcon">📥</div>
+      <div>
+        <div class="mh-tt" id="formTitle">手动导入 Skill</div>
+        <div class="mh-ss" id="formSub">上传 Skill 安装包并填写基本信息</div>
+      </div>
+      <div class="mh-x" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+    </div>
+    <div class="modal-body">
+
+      <div class="edit-note" id="editNote" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9l-8 13.9A2 2 0 004 21h16a2 2 0 001.7-3.2l-8-13.9a2 2 0 00-3.4 0z"/></svg>
+        <div>编辑将创建一个<b>新版本</b>。Skill 标识不可修改，且<b>版本号必须与当前版本不同</b>，请在「变更说明」中记录本次修改内容。</div>
+      </div>
+
+      <div class="template-bar" id="templateAction">
+        <div class="tb-copy">
+          <div class="tb-title">Skill 导入模板</div>
+          <div class="tb-desc">按模板规范准备文件后，再打包为 .zip 上传</div>
+        </div>
+        <button type="button" class="template-btn" title="原型展示，暂不提供下载交互">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+          模板下载
+        </button>
+      </div>
+
+      <!-- 上传文件 -->
+      <div class="ff" id="ffFile">
+        <div class="ff-lab">上传文件 <span class="req">*</span><span class="ff-hint">支持 .zip 格式，最大 50MB</span></div>
+        <div class="upload-zone" id="uploadZone">
+          <div class="ui"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg></div>
+          <div class="ut">点击或拖拽上传 <b>Skill 安装包</b></div>
+          <div class="us">仅支持 .zip 格式</div>
+        </div>
+        <div class="upload-file" id="uploadFile">
+          <div class="fi">🗜️</div>
+          <div>
+            <div class="fn" id="upName">skill-package.zip</div>
+            <div class="fs" id="upSize">已上传 · 1.2 MB</div>
+          </div>
+          <div class="fx" id="upRemove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+        </div>
+        <input type="file" id="fileInput" accept=".zip" hidden>
+        <div class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>请上传 .zip 格式的安装包</div>
+      </div>
+
+      <!-- Skill 标识 -->
+      <div class="ff" id="ffUid">
+        <div class="ff-lab">Skill 标识 <span class="req">*</span><span class="lock" id="uidLock">系统自动生成</span><span class="ff-hint">全局唯一；不同版本沿用同一标识</span></div>
+        <input type="text" class="mono" id="inUid" maxlength="64" readonly aria-readonly="true">
+        <div class="char-count"><span id="ccUid">0</span>/64</div>
+        <div class="err" id="errUid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>标识生成异常，请重新打开弹窗</div>
+      </div>
+
+      <!-- 显示名称 -->
+      <div class="ff" id="ffName">
+        <div class="ff-lab">显示名称 <span class="req">*</span><span class="ff-hint">最多 64 字</span></div>
+        <input type="text" id="inName" maxlength="64" placeholder="例如：行情查询">
+        <div class="char-count"><span id="ccName">0</span>/64</div>
+        <div class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>请填写显示名称</div>
+      </div>
+
+      <!-- 简介 -->
+      <div class="ff" id="ffDesc">
+        <div class="ff-lab">简介 <span class="req">*</span><span class="ff-hint">最多 1024 字</span></div>
+        <textarea id="inDesc" maxlength="1024" placeholder="简要描述该 Skill 的功能、适用场景与输入输出…"></textarea>
+        <div class="char-count"><span id="ccDesc">0</span>/1024</div>
+        <div class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>请填写简介</div>
+      </div>
+
+      <!-- 版本号 -->
+      <div class="ff" id="ffVer">
+        <div class="ff-lab">版本号 <span class="req">*</span><span class="ff-hint" id="verHint">例如：v1.0.0</span></div>
+        <input type="text" id="inVer" maxlength="32" placeholder="v1.0.0">
+        <div class="err" id="errVer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>请填写版本号</div>
+      </div>
+
+      <!-- 变更说明 -->
+      <div class="ff" id="ffLog">
+        <div class="ff-lab">变更说明 <span class="req">*</span><span class="ff-hint">最多 1024 字</span></div>
+        <textarea id="inLog" maxlength="1024" placeholder="说明本次版本的新增、优化或修复内容…"></textarea>
+        <div class="char-count"><span id="ccLog">0</span>/1024</div>
+        <div class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>请填写变更说明</div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <div class="sp"></div>
+      <button class="mbtn" data-close>取消</button>
+      <button class="mbtn primary" id="formSubmit">提交</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 弹窗：版本历史 ===== -->
+<div class="modal-overlay" id="modalVer">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mh-ic" id="vhIcon">🧩</div>
+      <div>
+        <div class="mh-tt" id="vhTitle">版本历史</div>
+        <div class="mh-ss" id="vhSub">同一标识下的全部版本</div>
+      </div>
+      <div class="mh-x" data-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+    </div>
+    <div class="modal-body">
+      <div class="vh-cur" id="vhCur"></div>
+      <div class="vh-list" id="vhList"></div>
+    </div>
+    <div class="modal-foot">
+      <div class="sp"></div>
+      <button class="mbtn" data-close>关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span id="toastTxt"></span></div>
+
+<script>
+/* ============================================================
+   数据模型：每个 Skill 拥有唯一标识 uid；versions 为版本数组，
+   同一 uid 不同版本号；current=true 为当前版本。
+============================================================ */
+const SKILLS = [
+  /* ---------- 内置 Skill ---------- */
+  {uid:"xaji0y6dpbhsahxthv3a3zmf8mdd4v30t9nt3w5uzbikcidkwnnhj7xvg0fn9xuy", name:"行情查询", icon:"📉", type:"builtin",
+   desc:"实时与历史行情数据查询，支持期货、现货多品种及多周期，可计算均价、涨跌幅、波动率等常用指标。",
+   versions:[
+     {ver:"v2.3.1", date:"2024-06-12", log:"新增夜盘行情字段，修复部分品种历史数据回溯偏差。", current:true},
+     {ver:"v2.2.0", date:"2024-04-08", log:"支持多品种批量查询，新增波动率指标。"},
+     {ver:"v2.0.0", date:"2024-01-15", log:"重构数据源接口，查询性能提升约 40%。"}
+   ]},
+  {uid:"41ibljh75lxo6qjiujv6oh9sdbdw2pcn9t84azytjxepq85jsg65kxvf1t2tala7", name:"图表生成", icon:"📊", type:"builtin",
+   desc:"根据数据自动绘制趋势图、对比图、K 线图、堆叠柱图等多种可视化图表，支持自定义主题与导出。",
+   versions:[
+     {ver:"v1.8.0", date:"2024-05-20", log:"新增 K 线图与双 Y 轴支持。", current:true},
+     {ver:"v1.6.2", date:"2024-03-02", log:"优化大数据量渲染性能。"}
+   ]},
+  {uid:"53lc58drc11ertj5pht0hl9xpseimvihcwi64ciyhe7ur23gdppq0y9dom5igqpk", name:"资讯检索", icon:"📰", type:"builtin",
+   desc:"聚合新闻、公告、研报等多源信息的全文检索能力，支持关键词、时间范围与来源过滤。",
+   versions:[{ver:"v1.5.2", date:"2024-06-01", log:"扩充资讯源覆盖，提升检索召回率。", current:true}]},
+  {uid:"i7p5tb94874frhocn9j2qp89uzfk8ut0cvs4f8cgvyie6ivwpvs7hzioykl1cq99", name:"研报生成", icon:"📄", type:"builtin",
+   desc:"按内置模板自动生成研报段落、摘要与结论，支持多种文风与结构化输出。",
+   versions:[{ver:"v1.2.0", date:"2024-05-11", log:"新增摘要自动生成与多文风切换。", current:true}]},
+  {uid:"chj755nf4zw9xa3kx7eedtjvzhwjr64dpja1wj0tpac56t4ufel6246hid25owf7", name:"文档解析", icon:"📑", type:"builtin",
+   desc:"解析 PDF / Word / Excel 等文档，抽取标题、表格、正文等结构化信息，供下游分析使用。",
+   versions:[{ver:"v1.0.4", date:"2024-04-22", log:"修复扫描件 OCR 偶发乱码问题。", current:true}]},
+  {uid:"5935a0l7253j2d54i3qk2iagl58kxo9t7e8g8jdp0lvsnujza7tz0yncxll4zklo", name:"数据清洗", icon:"🧹", type:"builtin",
+   desc:"对原始数据进行去噪、缺失值补全、异常值识别与标准化处理，输出规整的可分析数据集。",
+   versions:[{ver:"v1.1.0", date:"2024-03-18", log:"新增异常值识别策略与配置项。", current:true}]},
+
+  /* ---------- 企业共享 Skill ---------- */
+  {uid:"okep7y6wktakpuxqphr62gdswm31yihair4cowgzrixa11dpg8sbi4q2y9v86wzs", name:"风控指标库", icon:"🛡️", type:"shared",
+   desc:"企业统一维护的风控指标计算与阈值校验能力，覆盖敞口、保证金、集中度等核心维度。",
+   versions:[
+     {ver:"v3.0.2", date:"2024-06-09", log:"修订集中度阈值口径，与最新风控政策对齐。", current:true},
+     {ver:"v3.0.0", date:"2024-05-01", log:"全面升级指标体系，新增 12 项风控指标。"}
+   ]},
+  {uid:"3t60rjiw1swjckjlteiyzcotohp6vz41nam148p0tvhhpbmyofqewaouaxeqbnhl", name:"客户画像", icon:"👤", type:"shared",
+   desc:"整合多源数据生成客户标签与画像，支持分群、偏好分析与风险等级评估。",
+   versions:[{ver:"v2.1.0", date:"2024-05-26", log:"新增风险等级评估标签。", current:true}]},
+  {uid:"1n13jcat9mx2x18hafeyuhz1gv0e38daly8ozcywd14ve92mpnsm43d8w3zp08j3", name:"合规校验", icon:"⚖️", type:"shared",
+   desc:"对文本内容进行合规性与敏感词校验，输出风险点与修改建议，适配多类业务文档。",
+   versions:[{ver:"v1.6.3", date:"2024-06-04", log:"更新敏感词库，优化误报率。", current:true}]},
+  {uid:"trp0j43d5iqvnb4gh2m5zja8dzr1yxr2dhylurtp0lzjjeget1ghr09skdgigatj", name:"汇率换算", icon:"💱", type:"shared",
+   desc:"提供多币种实时与历史汇率换算能力，支持中间价、买入价、卖出价多口径。",
+   versions:[{ver:"v1.0.0", date:"2024-02-28", log:"首次发布，支持 28 种常用币种。", current:true}]},
+  {uid:"9tze5r5uqpgb7r3ocwbfuk9e1v2isqp49kwv08hhxfgcaqvkizzqy72wx7ptx63c", name:"产业链图谱", icon:"🏭", type:"shared",
+   desc:"构建上下游产业链关系图谱，支持节点钻取、关联企业查询与传导路径分析。",
+   versions:[
+     {ver:"v2.4.1", date:"2024-06-10", log:"补充新能源产业链节点数据。", current:true},
+     {ver:"v2.3.0", date:"2024-04-30", log:"新增传导路径分析。"}
+   ]},
+
+  /* ---------- 自定义 Skill ---------- */
+  {uid:"fl0ukeyz7srcbpljd84u89yjb1qx6gvwrdmly4lyk83tqll8os9xtogn1w1ht7pz", name:"持仓测算", icon:"📐", type:"custom",
+   desc:"个人工作空间的持仓盈亏测算工具，支持多腿组合、保证金占用与情景压力测试。",
+   versions:[
+     {ver:"v1.3.0", date:"2024-06-08", log:"新增情景压力测试，支持自定义价格冲击。", current:true},
+     {ver:"v1.2.0", date:"2024-05-12", log:"支持多腿组合测算。"},
+     {ver:"v1.0.0", date:"2024-04-01", log:"首次创建，实现单品种持仓盈亏测算。"}
+   ]},
+  {uid:"e9vifttd96qe3rzsj49itn7s55j2o7s3kkv9rftmttqlgzui1b0z3nx39rbsv55p", name:"螺纹钢日报", icon:"📋", type:"custom",
+   desc:"自动汇总螺纹钢每日现货、期货行情与库存数据，按固定模板生成结构化日报。",
+   versions:[
+     {ver:"v0.9.2", date:"2024-06-11", log:"调整库存数据来源，修复节假日数据缺失。", current:true},
+     {ver:"v0.9.0", date:"2024-05-20", log:"初版日报模板上线。"}
+   ]},
+  {uid:"sq0oxfq8myx444nlz15bcw790pdw5py6b2knftu2gc5wi6fqjja26yfpmvxpj4hn", name:"库存预警", icon:"📦", type:"custom",
+   desc:"监控品种库存水平，触达阈值时输出预警信号与建议关注的关联品种。",
+   versions:[{ver:"v1.0.0", date:"2024-06-02", log:"首次创建，支持单阈值库存预警。", current:true}]}
+];
+
+const TYPE_LABEL = {builtin:"内置", shared:"企业共享", custom:"自定义"};
+const BANNERS = {
+  builtin:'<span class="bicon">📦</span><div><b>内置 Skill</b>：由平台官方提供并维护的通用技能，开箱即用，不支持修改。</div>',
+  shared:'<span class="bicon">🏢</span><div><b>企业共享 Skill</b>：由企业内部沉淀并共享的技能，团队成员可直接挂载使用，统一由管理员维护。</div>',
+  custom:'<span class="bicon">🛠️</span><div><b>自定义 Skill</b>：你在个人工作空间创建的技能，仅自己可见，<b>支持编辑修改</b>，每次修改将生成新版本。</div>'
+};
+
+let currentTab = "builtin";
+let formMode = "create";      // create | edit
+let editingUid = null;
+let uploadedFileName = null;   // 模拟已上传文件
+
+/* ---------- 工具函数 ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function curVer(sk){return sk.versions.find(v=>v.current)||sk.versions[0];}
+function findSkill(uid){return SKILLS.find(s=>s.uid===uid);}
+
+let toastTimer=null;
+function toast(msg){
+  $("#toastTxt").textContent=msg;
+  $("#toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$("#toast").classList.remove("show"),2200);
+}
+
+/* ---------- 计数 ---------- */
+function refreshCounts(){
+  ["builtin","shared","custom"].forEach(t=>{
+    $("#cnt-"+t).textContent = SKILLS.filter(s=>s.type===t).length;
+  });
+}
+
+/* ---------- 渲染卡片网格 ---------- */
+function render(){
+  const grid = $("#grid");
+  const q = $("#searchInput").value.trim().toLowerCase();
+  $("#banner").innerHTML = BANNERS[currentTab];
+  $("#newBtn").classList.toggle("hide", currentTab!=="custom");
+
+  let list = SKILLS.filter(s=>s.type===currentTab);
+  if(q){
+    list = list.filter(s=> s.name.toLowerCase().includes(q) || s.uid.toLowerCase().includes(q) );
+  }
+
+  let html = "";
+  // 自定义页：首位放“新建卡”
+  if(currentTab==="custom" && !q){
+    html += `<div class="create-card" id="createCard">
+      <div class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></div>
+      <div class="ct">新建 Skill</div>
+      <div class="cs">手动导入 / 对话新建</div>
+    </div>`;
+  }
+
+  if(list.length===0 && !(currentTab==="custom" && !q)){
+    html += `<div class="empty">
+      <div class="ei">🔍</div>
+      <div class="et">${q?"未找到匹配的 Skill":"暂无 Skill"}</div>
+      <div class="es">${q?"试试更换关键词，或清空搜索条件":""}</div>
+    </div>`;
+  }
+
+  list.forEach(sk=>{
+    const v = curVer(sk);
+    const t = sk.type;
+    const idShort = sk.uid;
+    html += `<div class="skill-card">
+      <div class="sc-top">
+        <div class="sc-ic ${t}">${sk.icon}</div>
+        <div class="sc-head">
+          <div class="sc-name">${esc(sk.name)} <span class="ver-badge ${t}">${esc(v.ver)}</span></div>
+          <div class="sc-tags">
+            <span class="sc-tag ${t}">${TYPE_LABEL[t]}</span>
+            <span class="sc-tag ${t}">${sk.versions.length} 个版本</span>
+          </div>
+        </div>
+      </div>
+      <div class="sc-id">
+        <span class="idlab">标识</span>
+        <span class="idval" title="${idShort}">${idShort}</span>
+        <span class="idcopy" data-copy="${idShort}" title="复制标识"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg></span>
+      </div>
+      <div class="sc-desc">${esc(sk.desc)}</div>
+      <div class="sc-foot">
+        <span class="sc-ver-link" data-ver="${sk.uid}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>版本历史</span>
+        <span class="sp"></span>
+        <span class="sc-meta">更新于 ${v.date}</span>
+        ${ t==="custom" ? `<span class="sc-btn edit" data-edit="${sk.uid}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>编辑</span>` : `<span class="sc-btn" data-ver="${sk.uid}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>详情</span>` }
+      </div>
+    </div>`;
+  });
+
+  grid.innerHTML = html;
+  $("#tbHint").textContent = q ? `共匹配 ${list.length} 个` : "";
+}
+
+/* ============================================================
+   事件绑定
+============================================================ */
+/* Tab 切换 */
+$$("#tabbar .tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    $$("#tabbar .tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    currentTab = tab.dataset.tab;
+    render();
+  });
+});
+
+/* 搜索（名称 + 标识 模糊） */
+$("#searchInput").addEventListener("input",function(){
+  $("#searchBox").classList.toggle("has", this.value.length>0);
+  render();
+});
+$("#searchClr").addEventListener("click",()=>{
+  $("#searchInput").value="";
+  $("#searchBox").classList.remove("has");
+  render();
+});
+
+/* 网格内事件委托：复制 / 版本 / 编辑 */
+$("#grid").addEventListener("click",function(e){
+  const copy = e.target.closest("[data-copy]");
+  const ver  = e.target.closest("[data-ver]");
+  const edit = e.target.closest("[data-edit]");
+  const create = e.target.closest("#createCard");
+  if(copy){
+    navigator.clipboard?.writeText(copy.dataset.copy).catch(()=>{});
+    toast("标识已复制");
+  }else if(edit){
+    openForm("edit", edit.dataset.edit);
+  }else if(ver){
+    openVersionHistory(ver.dataset.ver);
+  }else if(create){
+    openChoice();
+  }
+});
+
+/* 新建按钮 */
+$("#newBtn").addEventListener("click",openChoice);
+
+/* ---------- 弹窗通用关闭 ---------- */
+$$("[data-close]").forEach(el=>el.addEventListener("click",e=>{
+  e.target.closest(".modal-overlay").classList.remove("show");
+}));
+$$(".modal-overlay").forEach(ov=>ov.addEventListener("click",e=>{
+  if(e.target===ov) ov.classList.remove("show");
+}));
+
+/* ---------- 选择新建方式 ---------- */
+function openChoice(){ $("#modalChoice").classList.add("show"); }
+$("#choiceImport").addEventListener("click",()=>{
+  $("#modalChoice").classList.remove("show");
+  openForm("create");
+});
+$("#choiceChat").addEventListener("click",()=>{
+  toast("「对话新建」即将上线，敬请期待");
+});
+
+/* ============================================================
+   表单：新建 / 编辑
+============================================================ */
+function setCount(id,val,max){
+  const el=$("#"+id); el.textContent=val.length;
+  const cc=el.closest(".char-count");
+  cc.classList.toggle("over", val.length>max);
+}
+function bindCount(inputId,ccId,max){
+  $("#"+inputId).addEventListener("input",function(){ setCount(ccId,this.value,max); });
+}
+bindCount("inUid","ccUid",64);
+bindCount("inName","ccName",64);
+bindCount("inDesc","ccDesc",1024);
+bindCount("inLog","ccLog",1024);
+
+/*
+  Skill 标识规则：sk + UUID v4（去掉连字符），共 34 位字母数字。
+  标识首次创建后保持不变，版本号单独管理；正式环境应由服务端生成并加唯一约束。
+*/
+function generateSkillUid(){
+  let uid;
+  do{
+    let hex;
+    if(window.crypto && typeof window.crypto.randomUUID==="function"){
+      hex=window.crypto.randomUUID().replace(/-/g,"");
+    }else{
+      const bytes=new Uint8Array(16);
+      window.crypto.getRandomValues(bytes);
+      bytes[6]=(bytes[6]&15)|64;
+      bytes[8]=(bytes[8]&63)|128;
+      hex=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+    }
+    uid="sk"+hex;
+  }while(SKILLS.some(s=>s.uid===uid));
+  return uid;
+}
+
+function clearErrors(){ $$(".ff").forEach(f=>f.classList.remove("invalid")); }
+function resetForm(){
+  ["inUid","inName","inDesc","inVer","inLog"].forEach(id=>$("#"+id).value="");
+  ["ccUid","ccName","ccDesc","ccLog"].forEach(id=>$("#"+id).textContent="0");
+  $$(".char-count").forEach(c=>c.classList.remove("over"));
+  removeFile();
+  clearErrors();
+}
+
+function openForm(mode, uid){
+  formMode=mode; editingUid=uid||null;
+  resetForm();
+  $("#modalForm").classList.add("show");
+
+  if(mode==="create"){
+    $("#formIcon").textContent="📥";
+    $("#formTitle").textContent="手动导入 Skill";
+    $("#formSub").textContent="上传 Skill 安装包并填写基本信息";
+    $("#editNote").style.display="none";
+    $("#templateAction").style.display="flex";
+    $("#uidLock").style.display="inline-block";
+    $("#uidLock").textContent="系统自动生成";
+    $("#inUid").disabled=false;
+    $("#inUid").readOnly=true;
+    $("#inUid").value=generateSkillUid();
+    setCount("ccUid",$("#inUid").value,64);
+    $("#verHint").textContent="例如：v1.0.0";
+    $("#ffFile").style.display="";
+  }else{
+    const sk=findSkill(uid); const v=curVer(sk);
+    $("#formIcon").textContent="✏️";
+    $("#formTitle").textContent="编辑 Skill · "+sk.name;
+    $("#formSub").textContent="修改信息将生成一个新版本";
+    $("#editNote").style.display="flex";
+    $("#templateAction").style.display="none";
+    $("#uidLock").style.display="inline-block";
+    $("#uidLock").textContent="不可修改";
+    // 预填 + 锁定标识
+    $("#inUid").value=sk.uid; $("#inUid").disabled=false; $("#inUid").readOnly=true; setCount("ccUid",sk.uid,64);
+    $("#inName").value=sk.name; setCount("ccName",sk.name,64);
+    $("#inDesc").value=sk.desc; setCount("ccDesc",sk.desc,1024);
+    $("#inVer").value=""; // 必须填写新版本号
+    $("#verHint").textContent="当前版本 "+v.ver+" · 新版本号必须不同";
+    $("#ffFile").style.display=""; // 编辑可重新上传包（可选保持原包）
+  }
+}
+
+/* 上传文件（模拟） */
+$("#uploadZone").addEventListener("click",()=>$("#fileInput").click());
+$("#fileInput").addEventListener("change",function(){
+  const f=this.files[0]; if(!f) return;
+  if(!/\.zip$/i.test(f.name)){ $("#ffFile").classList.add("invalid"); return; }
+  showFile(f.name, (f.size/1048576).toFixed(1)+" MB");
+});
+$("#uploadZone").addEventListener("dragover",e=>{e.preventDefault();});
+$("#uploadZone").addEventListener("drop",function(e){
+  e.preventDefault();
+  const f=e.dataTransfer.files[0]; if(!f) return;
+  if(!/\.zip$/i.test(f.name)){ $("#ffFile").classList.add("invalid"); return; }
+  showFile(f.name, (f.size/1048576).toFixed(1)+" MB");
+});
+function showFile(name,size){
+  uploadedFileName=name;
+  $("#upName").textContent=name;
+  $("#upSize").textContent="已上传 · "+size;
+  $("#uploadZone").style.display="none";
+  $("#uploadFile").classList.add("show");
+  $("#ffFile").classList.remove("invalid");
+}
+function removeFile(){
+  uploadedFileName=null;
+  $("#fileInput").value="";
+  $("#uploadZone").style.display="";
+  $("#uploadFile").classList.remove("show");
+}
+$("#upRemove").addEventListener("click",removeFile);
+
+/* 提交 */
+$("#formSubmit").addEventListener("click",function(){
+  clearErrors();
+  let ok=true;
+  const uid=$("#inUid").value.trim();
+  const name=$("#inName").value.trim();
+  const desc=$("#inDesc").value.trim();
+  const ver=$("#inVer").value.trim();
+  const log=$("#inLog").value.trim();
+
+  // 文件：新建必填
+  if(formMode==="create" && !uploadedFileName){ $("#ffFile").classList.add("invalid"); ok=false; }
+
+  // 标识：系统自动生成；此处保留前端格式与重复校验作为原型兜底
+  if(formMode==="create"){
+    const valid=/^[a-zA-Z0-9]+$/.test(uid);
+    const dup=SKILLS.some(s=>s.uid===uid);
+    if(!uid || !valid || dup){
+      $("#errUid").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>'+ (!uid?"未能生成 Skill 标识，请重新打开弹窗":(!valid?"系统生成的标识格式异常":"标识已存在，请重新打开弹窗生成"));
+      $("#ffUid").classList.add("invalid"); ok=false;
+    }
+  }
+
+  if(!name){ $("#ffName").classList.add("invalid"); ok=false; }
+  if(!desc){ $("#ffDesc").classList.add("invalid"); ok=false; }
+
+  // 版本号
+  if(!ver){
+    $("#errVer").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>请填写版本号';
+    $("#ffVer").classList.add("invalid"); ok=false;
+  }else if(formMode==="edit"){
+    const sk=findSkill(editingUid);
+    if(sk.versions.some(x=>x.ver.toLowerCase()===ver.toLowerCase())){
+      $("#errVer").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>版本号必须与已有版本不同（当前：'+curVer(sk).ver+'）';
+      $("#ffVer").classList.add("invalid"); ok=false;
+    }
+  }
+
+  if(!log){ $("#ffLog").classList.add("invalid"); ok=false; }
+
+  if(!ok){
+    // 滚动到第一个错误
+    const firstErr=$(".ff.invalid");
+    if(firstErr) firstErr.scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+
+  const today=new Date().toISOString().slice(0,10);
+  if(formMode==="create"){
+    SKILLS.push({
+      uid, name, desc, icon:"🧩", type:"custom",
+      versions:[{ver, date:today, log, current:true}]
+    });
+    toast("Skill 已创建：" + name + " · " + ver);
+  }else{
+    const sk=findSkill(editingUid);
+    sk.name=name; sk.desc=desc;
+    sk.versions.forEach(v=>v.current=false);
+    sk.versions.unshift({ver, date:today, log, current:true});
+    toast("已更新并生成新版本：" + ver);
+  }
+  $("#modalForm").classList.remove("show");
+  refreshCounts(); render();
+});
+
+/* ============================================================
+   版本历史
+============================================================ */
+function openVersionHistory(uid){
+  const sk=findSkill(uid);
+  const v=curVer(sk);
+  $("#vhIcon").textContent=sk.icon;
+  $("#vhTitle").textContent=sk.name+" · 版本历史";
+  $("#vhSub").textContent="同一标识下共 "+sk.versions.length+" 个版本，标识保持不变";
+  $("#vhCur").innerHTML=`
+    <div class="vc-ic">${sk.icon}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13.5px;font-weight:700">当前版本 ${esc(v.ver)} · <span style="color:var(--mute);font-weight:400">${TYPE_LABEL[sk.type]} Skill</span></div>
+      <div class="vc-id">标识：${sk.uid}</div>
+    </div>`;
+  let html="";
+  // 按时间倒序（数据已是最新在前）
+  sk.versions.forEach(ver=>{
+    html+=`<div class="vh-item ${ver.current?'cur':''}">
+      <div class="vh-top">
+        <span class="vh-ver">${esc(ver.ver)}</span>
+        ${ver.current?'<span class="vh-cur-tag">当前</span>':''}
+        <span class="vh-date">${ver.date}</span>
+      </div>
+      <div class="vh-log">${esc(ver.log)}</div>
+    </div>`;
+  });
+  $("#vhList").innerHTML=html;
+  $("#modalVer").classList.add("show");
+}
+
+/* ---------- 侧边栏交互（沿用原型） ---------- */
+$$(".nav-group .ng-head").forEach(h=>h.addEventListener("click",()=>h.parentNode.classList.toggle("open")));
+$$(".nav-item, .ng-sub-item").forEach(el=>el.addEventListener("click",function(e){
+  e.stopPropagation();
+  const cur=$(".nav-item.is-active, .ng-sub-item.is-active");
+  if(cur) cur.classList.remove("is-active");
+  el.classList.add("is-active");
+}));
+
+/* ESC 关闭弹窗 */
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") $$(".modal-overlay.show").forEach(m=>m.classList.remove("show"));
+});
+
+/* ---------- 初始化 ---------- */
+refreshCounts();
+render();
+</script>
+<script src="./prototype-routes.js"></script>
+<script src="./prototype-nav.js"></script>
+</body>
+</html>
