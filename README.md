@@ -2,6 +2,79 @@
 
 EBC Agent Studio 的统一交互原型。项目使用统一 App Shell 管理平台导航和页面路由，现有功能原型作为独立页面接入。
 
+## 小白使用指南
+
+### 只打开原型
+
+你不需要懂代码，也不需要安装 npm 依赖。
+
+最简单的方式是直接双击项目根目录的 `index.html`。
+
+如果页面没有正常打开，推荐使用本地服务：
+
+1. 安装 [Node.js](https://nodejs.org/)，选择长期支持版（LTS）。
+2. 在项目文件夹空白处点击右键，选择“在终端中打开”。
+3. 输入并回车：
+
+```bash
+npm run dev
+```
+
+4. 打开浏览器访问 `http://localhost:5173/`。
+5. 演示结束后，回到终端按 `Ctrl + C` 停止服务。
+
+这个原型没有需要单独安装的 npm 依赖，因此不需要执行 `npm install`。
+
+### 参与团队设计
+
+GitHub 仓库地址：
+
+```text
+https://github.com/PureZheng/ebc-agent-studio-prototype
+```
+
+四个人不要互相传文件，也不要直接覆盖别人的修改。每个人先拉取最新版本，在自己的分支上设计，完成后再提交。
+
+第一次下载项目，可以使用 GitHub Desktop 的 `File → Clone repository`，找到 `PureZheng/ebc-agent-studio-prototype` 后点击 `Clone`。
+
+也可以使用终端：
+
+```bash
+git clone https://github.com/PureZheng/ebc-agent-studio-prototype.git
+cd ebc-agent-studio-prototype
+```
+
+每次开始设计前，先同步主版本：
+
+```bash
+git switch main
+git pull origin main
+git switch -c feature/tool-page
+```
+
+把 `feature/tool-page` 换成自己的功能名称，例如 `feature/agent-page` 或 `feature/knowledge-page`。这个分支可以理解为自己的草稿区，不会影响其他人的工作。
+
+设计完成后，先保存并检查页面，再执行：
+
+```bash
+git status
+git add .
+git commit -m "feat: 完成功能页面设计"
+git push -u origin feature/tool-page
+```
+
+然后打开 GitHub 仓库，点击 `Compare & pull request`，请另一位成员检查后合并到 `main`。Pull Request 可以理解为“请团队确认并合并我的设计”。
+
+合并完成后，下一次工作重新从最新主版本创建分支：
+
+```bash
+git switch main
+git pull origin main
+git switch -c feature/<新的功能>
+```
+
+如果使用 GitHub Desktop，对应操作是：`Fetch origin → Pull origin`（拉取）、`New Branch`（创建分支）、填写 Summary 后 `Commit`（提交）、`Push origin`（推送）、`Create Pull Request`（发起合并）。
+
 ## 快速开始
 
 ### 方式一：直接打开
