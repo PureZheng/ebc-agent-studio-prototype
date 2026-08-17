@@ -11,6 +11,15 @@
   --prototype-muted: #7b8494;
 }
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 .prototype-shell,
 .prototype-shell * {
   box-sizing: border-box;
@@ -18,8 +27,10 @@
 
 .prototype-shell {
   display: flex;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
   overflow: hidden;
   background: #f4f6fa;
   color: var(--prototype-text);
@@ -68,11 +79,13 @@
 .prototype-shell-nav {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 4px 12px 14px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.prototype-shell-nav::-webkit-scrollbar { width: 6px; }
-.prototype-shell-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .12); border-radius: 3px; }
+.prototype-shell-nav::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .prototype-nav-cap { padding: 13px 12px 7px; color: #5c6a88; font-size: 10.5px; letter-spacing: 1px; }
 
 .prototype-nav-item,
@@ -131,8 +144,8 @@
 .prototype-shell-user-text { flex: 1; min-width: 0; }
 .prototype-shell-settings { color: #7d8aa0; font-size: 17px; }
 
-.prototype-shell-main { min-width: 0; flex: 1; height: 100vh; overflow: hidden; }
-.prototype-shell-frame { display: block; width: 100%; height: 100%; border: 0; background: #f4f6fa; }
+.prototype-shell-main { min-width: 0; min-height: 0; flex: 1 1 0; height: 100%; overflow: hidden; }
+.prototype-shell-frame { display: block; width: 100%; max-width: 100%; height: 100%; border: 0; overflow: hidden; background: #f4f6fa; }
 .prototype-shell.is-immersive .prototype-shell-sidebar { display: none; }
 .prototype-shell-toast { position: fixed; top: 24px; right: 24px; z-index: 10000; max-width: 420px; padding: 11px 16px; border-radius: 9px; background: #1f2a44; color: #fff; box-shadow: 0 8px 26px rgba(15, 28, 55, .22); font-size: 13px; line-height: 1.5; opacity: 0; pointer-events: none; transform: translateY(-8px); transition: opacity .18s ease, transform .18s ease; }
 .prototype-shell-toast.show { opacity: 1; transform: translateY(0); }
