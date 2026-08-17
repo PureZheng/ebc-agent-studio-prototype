@@ -22,7 +22,7 @@
     if (path.indexOf("EBC-Agent-Studio-MCP接入new.html") >= 0) return "mcp";
     if (path.indexOf("工具管理.dc.html") >= 0) return "tool";
     if (path.indexOf("EBC-Agent-Studio-Skill技能管理.html") >= 0) return "skill";
-    if (path.indexOf("EBC-Agent-Studio-知识库.html") >= 0) return "knowledge";
+    if (path.indexOf("EBC-Agent-Studio-知识管理中心-知识库.html") >= 0) return "knowledge";
     if (path.indexOf("EBC-Agent-Studio-原型-对话测试.html") >= 0) return "chat";
     if (path.indexOf("EBC-Agent-Studio-结构化数据接入.html") >= 0) return query.get("view") === "tables" ? "structured-tables" : "structured-sources";
     if (path.indexOf("EBC-Agent-Studio-非结构化数据接入.html") >= 0) return query.get("view") === "assets" ? "unstructured-assets" : "unstructured-sources";
